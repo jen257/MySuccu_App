@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">我的多肉档案</string>
-    <string name="loading">加载中...</string>
+    <string name="app_name">肉崽观察日记</string>
+    <string name="loading">加载中…</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
     <string name="delete">删除</string>
@@ -10,47 +11,58 @@
     <string name="batch_operation">批量操作</string>
     <string name="batch_select_all">全选</string>
 
-    <string name="nav_home">花园</string>
+    <string name="nav_home">肉崽小窝</string>
     <string name="nav_calendar">日历</string>
     <string name="nav_weather">天气</string>
     <string name="nav_settings">设置</string>
     <string name="nav_profile">我的</string>
+    <string name="onboarding_title">快来给你的肉肉上户口啦~</string>
 
     <string name="sort_latest_water">最近浇水</string>
     <string name="sort_newest_add">最新添加</string>
     <string name="sort_price_high">价格高低</string>
-    <string name="search_hint">搜索多肉名称或分类...</string>
+    <string name="search_hint">搜索多肉名称或分类…</string>
     <string name="days_format">%1$d 天</string>
+    <string name="days_ago_format">%1$d 天前</string>
+    <string name="just_now">刚刚</string>
     <string name="filter_all">全部多肉</string>
     <string name="filter_aizoaceae">番杏科</string>
 
-    <string name="empty_plant_title">花园里空空如也</string>
+    <string name="empty_plant_title">这里还没有小生命哦 ~ </string>
     <string name="empty_plant_desc">点击右下角 + 号，迎接你的第一盆多肉吧！</string>
 
     <string name="action_water">浇水</string>
     <string name="action_fertilize">施肥</string>
     <string name="action_repot">换土/换盆</string>
     <string name="action_trim_roots">修根</string>
-    <string name="action_medicine">用药/杀虫</string>
-    <string name="action_prune">修剪枯叶</string>
+    <string name="action_medicine">用药</string>
+    <string name="action_bug">杀虫</string>
+    <string name="action_prune">扒皮</string>
     <string name="action_photo">拍照记录</string>
+    <string name="action_other">其他</string>
     <string name="template_water_fertilize">一键浇水+施肥</string>
 
-    <string name="plant_name_hint">给它起个名字吧 (如: 冰玉)</string>
+    <string name="plant_name_hint">起个名字吧~</string>
     <string name="plant_category">科属分类</string>
     <string name="plant_arrive_date">到家日期</string>
+    <string name="plant_potting_date">上盆时间</string>
+    <string name="plant_care_duration">养护时长</string>
+    <string name="plant_price">价格</string>
+    <string name="plant_tag">标签</string>
     <string name="plant_cost_total">总计花费</string>
-    <string name="plant_cost_plant">肉价</string>
-    <string name="plant_cost_pot">盆价</string>
-    <string name="plant_cost_soil">土价</string>
+    <string name="plant_headshot">添加肉肉的大头照</string>
+    <string name="view_photos">查看靓照</string>
+    <string name="description">写写它的故事</string>
+    <string name="record_status">记录肉肉的状态</string>
+    <string name="record_file">归档文件夹</string>
 
     <string name="status_healthy">健康生长</string>
     <string name="status_warning">状态不佳</string>
     <string name="status_danger">生病 / 化水</string>
-    <string name="status_dead">已阵亡 (生成墓碑)</string>
+    <string name="status_dead">渡劫失败 (立个碑吧)</string>
     <string name="status_sold">已出坑 / 送人</string>
 
-    <string name="milestone_title">成长里程碑</string>
+    <string name="milestone_title">崽崽的高光时刻</string>
     <string name="milestone_sprout">爆侧芽</string>
     <string name="milestone_new_leaf">新叶萌发</string>
     <string name="milestone_color">上色</string>
@@ -59,7 +71,7 @@
     <string name="stat_total_plants">植物总数</string>
     <string name="stat_survival_rate">整体存活率</string>
     <string name="stat_most_expensive">最贵多肉</string>
-    <string name="stat_oldest">养护最久元老</string>
+    <string name="stat_oldest">开国元老</string>
 
     <string name="alert_high_temp">高温预警：请注意遮阳通风</string>
     <string name="alert_heavy_rain">暴雨预警：露养多肉请注意避雨</string>
@@ -86,4 +98,25 @@
     <string name="permission_location_desc">为了获取所在地的和风天气预报与微气候预警，请允许获取位置信息。</string>
     <string name="permission_grant">去授权</string>
     <string name="permission_deny">暂时不要</string>
+
+    <string name="rmb">人民币</string>
+    <string name="usd">美元</string>
+    <string name="eur">欧元</string>
+    <string name="gbp">英镑</string>
+    <string name="rm_currency">马币</string>
+    <string name="hkd_currency">港币</string>
+
+    <string name="edit_price">编辑价格</string>
+    <string name="edit_potting_date">编辑上盆时间</string>
+    <string name="edit_arrival_date">编辑到家日期</string>
+    <string name="edit_price_hint">价格编辑功能待实现</string>
+    <string name="edit_date_hint">日期选择器待实现</string>
+    <string name="confirm">确定</string>
+    <string name="price_updated">价格已更新</string>
+    <string name="potting_date_updated">上盆时间已更新</string>
+    <string name="arrival_date_updated">到家日期已更新</string>
+    <string name="edit_label">编辑标签: %1$s</string>
+    <string name="edit_folder">打开层级编辑器: %1$s</string>
+    <string name="record_action">已记录: %1$s</string>
+    <string name="manage_action">操作: %1$s</string>
 </resources>

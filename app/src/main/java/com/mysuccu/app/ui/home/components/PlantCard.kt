@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
@@ -25,8 +24,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
-import com.mysuccu.app.ui.theme.*
 
+// 骨架屏闪烁动画 (引用主题的分隔线颜色)
 @Composable
 fun Modifier.shimmerEffect(): Modifier {
     val transition = rememberInfiniteTransition(label = "shimmer")
@@ -35,7 +34,7 @@ fun Modifier.shimmerEffect(): Modifier {
         animationSpec = infiniteRepeatable(animation = tween(1000, easing = LinearEasing), repeatMode = RepeatMode.Reverse),
         label = "alpha"
     )
-    return this.background(DividerGray.copy(alpha = alpha.value))
+    return this.background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = alpha.value))
 }
 
 @Composable
@@ -44,22 +43,32 @@ fun PlantCard(
     plantName: String = "",
     statusText: String = "",
     days: Int = 0,
-    isHealthy: Boolean = true,
-    statusColor: Color = ThemeOfficialContainer, // 默认调用健康色 #D2DC97
+    statusType: Int = 0, // 0: 默认/健康, 1: 警告(紫色系), 2: 危险(粉色系)
     isLoading: Boolean = false
 ) {
+    // 🚀 核心逻辑：根据状态类型，从不同的主题槽位取色
+    val badgeContainerColor = when (statusType) {
+        1 -> MaterialTheme.colorScheme.tertiaryContainer  // 映射到各组的 Status2 (如紫色)
+        2 -> MaterialTheme.colorScheme.secondaryContainer // 映射到各组的 Status1 (如粉色)
+        else -> MaterialTheme.colorScheme.primaryContainer   // 映射到各组的 Container (如芽绿)
+    }
+
+    val badgeTextColor = when (statusType) {
+        1, 2 -> MaterialTheme.colorScheme.onSecondaryContainer
+        else -> MaterialTheme.colorScheme.primary
+    }
+
     Card(
-        modifier = modifier.fillMaxWidth().clickable(enabled = !isLoading) { },
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = SurfaceLight),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        border = BorderStroke(1.dp, DividerGray)
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
     ) {
         if (isLoading) {
             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Box(modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(8.dp)).shimmerEffect())
                 Box(modifier = Modifier.fillMaxWidth(0.8f).height(12.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
-                Box(modifier = Modifier.fillMaxWidth(0.5f).height(10.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
             }
             return@Card
         }
@@ -69,24 +78,23 @@ fun PlantCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .background(ThemeOfficialContainer.copy(alpha = 0.3f)) // #D2DC97
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
             ) {
                 Text(
                     text = if (plantName.isNotEmpty()) plantName.take(1) else "?",
                     fontSize = 40.sp, fontWeight = FontWeight.Bold,
-                    color = ThemeOfficialPrimary.copy(alpha = 0.4f), // #1A3D59
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
                     modifier = Modifier.align(Alignment.Center)
                 )
 
                 if (statusText.isNotEmpty()) {
                     Surface(
-                        color = statusColor,
+                        color = badgeContainerColor,
                         shape = RoundedCornerShape(percent = 50),
                         modifier = Modifier.align(Alignment.TopEnd).padding(6.dp)
                     ) {
                         Text(
-                            text = statusText, fontSize = 8.sp, fontWeight = FontWeight.Bold,
-                            color = if (statusColor == ThemeOfficialContainer) ThemeOfficialPrimary else Color.White,
+                            text = statusText, fontSize = 8.sp, fontWeight = FontWeight.Bold, color = badgeTextColor,
                             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                         )
                     }
@@ -95,13 +103,13 @@ fun PlantCard(
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
                     text = plantName, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold,
-                    color = TextPrimary, maxLines = 1, overflow = TextOverflow.Ellipsis
+                    color = MaterialTheme.colorScheme.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Outlined.DateRange, null, modifier = Modifier.size(12.dp), tint = ThemeOfficialAccent2)
+                    Icon(Icons.Outlined.DateRange, null, modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = stringResource(id = R.string.days_format, days), fontSize = 10.sp, color = ThemeOfficialAccent2)
+                    Text(text = stringResource(id = R.string.days_format, days), fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -110,15 +118,16 @@ fun PlantCard(
 
 @Composable
 fun AddPlantCard(modifier: Modifier = Modifier) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Box(
         modifier = modifier
             .fillMaxWidth().aspectRatio(0.7f).clip(RoundedCornerShape(16.dp))
-            .background(SurfaceLight)
+            .background(MaterialTheme.colorScheme.surface)
             .clickable { }
             .padding(2.dp)
             .drawBehind {
                 drawRoundRect(
-                    color = ThemeOfficialPrimary.copy(alpha = 0.3f),
+                    color = primaryColor.copy(alpha = 0.3f),
                     style = Stroke(width = 4f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)),
                     cornerRadius = CornerRadius(16.dp.toPx())
                 )
@@ -127,11 +136,11 @@ fun AddPlantCard(modifier: Modifier = Modifier) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
-                modifier = Modifier.size(36.dp).clip(RoundedCornerShape(percent = 50)).background(ThemeOfficialContainer),
+                modifier = Modifier.size(36.dp).clip(RoundedCornerShape(percent = 50)).background(MaterialTheme.colorScheme.primaryContainer),
                 contentAlignment = Alignment.Center
-            ) { Icon(Icons.Default.Add, null, tint = ThemeOfficialPrimary, modifier = Modifier.size(20.dp)) }
+            ) { Icon(Icons.Default.Add, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp)) }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(stringResource(id = R.string.add), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = ThemeOfficialPrimary)
+            Text(stringResource(id = R.string.add), fontSize = 11.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
         }
     }
 }

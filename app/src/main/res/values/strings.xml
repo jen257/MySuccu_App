@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Succu</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
@@ -15,34 +16,45 @@
     <string name="nav_weather">Weather</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_profile">Profile</string>
+    <string name="onboarding_title">Record how it first came into your life ~ </string>
 
     <string name="sort_latest_water">Latest Watered</string>
     <string name="sort_newest_add">Newest Added</string>
     <string name="sort_price_high">Price: High to Low</string>
-    <string name="search_hint">Search by name or category...</string>
+    <string name="search_hint">Search by name or category…</string>
     <string name="days_format">%1$d days</string>
+    <string name="days_ago_format">%1$d days ago</string>
+    <string name="just_now">Just now</string>
     <string name="filter_all">All Collections</string>
     <string name="filter_aizoaceae">Aizoaceae</string>
 
     <string name="empty_plant_title">Your garden is empty</string>
-    <string name="empty_plant_desc">Tap the + icon in the bottom right to welcome your first succulent!</string>
+    <string name="empty_plant_desc">Tap the + icon to welcome your first succulent!</string>
 
     <string name="action_water">Water</string>
     <string name="action_fertilize">Fertilize</string>
-    <string name="action_repot">Repot / Change Soil</string>
-    <string name="action_trim_roots">Trim Roots</string>
-    <string name="action_medicine">Pest Control / Meds</string>
-    <string name="action_prune">Prune Leaves</string>
+    <string name="action_repot">Repot</string>
+    <string name="action_trim_roots">Trim</string>
+    <string name="action_medicine">Meds</string>
+    <string name="action_bug">Pest Control</string>
+    <string name="action_prune">Prune</string>
     <string name="action_photo">Take Photo</string>
-    <string name="template_water_fertilize">1-Tap Water + Fertilize</string>
+    <string name="action_other">Other</string>
+    <string name="template_water_fertilize">Quick: Water and Fertilize</string>
 
-    <string name="plant_name_hint">Give it a name (e.g., Ice Berry)</string>
-    <string name="plant_category">Category / Genus</string>
+    <string name="plant_name_hint">Give it a name ~</string>
+    <string name="plant_category">Category/Genus</string>
     <string name="plant_arrive_date">Arrival Date</string>
+    <string name="plant_potting_date">Potting Date</string>
+    <string name="plant_care_duration">Care Duration</string>
+    <string name="plant_price">Price</string>
+    <string name="plant_tag">Tag</string>
     <string name="plant_cost_total">Total Cost</string>
-    <string name="plant_cost_plant">Plant Cost</string>
-    <string name="plant_cost_pot">Pot Cost</string>
-    <string name="plant_cost_soil">Soil Cost</string>
+    <string name="plant_headshot">Succulent Profile Photo</string>
+    <string name="view_photos">View Glamour Shots</string>
+    <string name="description">Story</string>
+    <string name="record_status">Record a Status</string>
+    <string name="record_file">File Folder</string>
 
     <string name="status_healthy">Healthy</string>
     <string name="status_warning">Needs Attention</string>
@@ -59,31 +71,52 @@
     <string name="stat_total_plants">Total Plants</string>
     <string name="stat_survival_rate">Survival Rate</string>
     <string name="stat_most_expensive">Most Expensive</string>
-    <string name="stat_oldest">Oldest Succulent</string>
+    <string name="stat_oldest">The Elder</string>
 
-    <string name="alert_high_temp">High Temp Alert: Please ensure shading and ventilation.</string>
-    <string name="alert_heavy_rain">Heavy Rain Alert: Please protect outdoor succulents from rain.</string>
-    <string name="alert_frost">Frost Alert: Please move indoors to keep warm.</string>
+    <string name="alert_high_temp">High Temp Alert: Ensure shading and ventilation.</string>
+    <string name="alert_heavy_rain">Heavy Rain Alert: Protect outdoor plants from rain.</string>
+    <string name="alert_frost">Frost Alert: Move indoors to keep warm.</string>
 
-    <string name="settings_account">Account Management</string>
+    <string name="settings_account">Account</string>
     <string name="settings_sync">Cloud Sync (Supabase)</string>
     <string name="settings_export">Export Backup (CSV/JSON)</string>
     <string name="settings_theme">Appearance &amp; Themes</string>
     <string name="settings_pro_title">Upgrade to Pro</string>
-    <string name="settings_pro_desc">Unlock unlimited capacity and 9 premium succulent color palettes.</string>
+    <string name="settings_pro_desc">Unlock unlimited capacity and 9 premium color palettes.</string>
     <string name="settings_about">About &amp; Feedback</string>
     <string name="settings_logout">Log Out</string>
 
     <string name="login_wechat">WeChat Login</string>
-    <string name="login_phone">Phone Verification</string>
+    <string name="login_phone">Phone Login</string>
     <string name="login_email">Email &amp; Password</string>
-    <string name="limit_free_reached">Garden Full: Free tier allows tracking up to 20 succulents.</string>
-    <string name="limit_photo_reached">Album Full: Free tier allows up to 20 photos per plant.</string>
+    <string name="limit_free_reached">Garden Full: Free tier limit is 20 succulents.</string>
+    <string name="limit_photo_reached">Album Full: Free tier limit is 20 photos per plant.</string>
 
     <string name="permission_camera_title">Camera Access Required</string>
-    <string name="permission_camera_desc">We need camera access to take beautiful photos of your succulents.</string>
+    <string name="permission_camera_desc">Allow camera access to take beautiful photos for your plant‘s profile</string>
     <string name="permission_location_title">Location Access Required</string>
-    <string name="permission_location_desc">Please allow location access to get local weather forecasts and microclimate alerts.</string>
+    <string name="permission_location_desc">To provide accurate weather forecasts and care alerts for your plants, please allow location access.</string>
     <string name="permission_grant">Grant Access</string>
     <string name="permission_deny">Not Now</string>
+
+    <string name="rmb">Chinese Yuan</string>
+    <string name="usd">US Dollar</string>
+    <string name="eur">Euro</string>
+    <string name="gbp">British Pound</string>
+    <string name="rm_currency">Malaysian Ringgit</string>
+    <string name="hkd_currency">Hong Kong Dollar</string>
+
+    <string name="edit_price">Edit Price</string>
+    <string name="edit_potting_date">Edit Potting Date</string>
+    <string name="edit_arrival_date">Edit Arrival Date</string>
+    <string name="edit_price_hint">Price edit feature to be implemented</string>
+    <string name="edit_date_hint">Date picker to be implemented</string>
+    <string name="confirm">Confirm</string>
+    <string name="price_updated">Price updated</string>
+    <string name="potting_date_updated">Potting date updated</string>
+    <string name="arrival_date_updated">Arrival date updated</string>
+    <string name="edit_label">Edit tag: %1$s</string>
+    <string name="edit_folder">Open folder editor: %1$s</string>
+    <string name="record_action">Recorded: %1$s</string>
+    <string name="manage_action">Action: %1$s</string>
 </resources>

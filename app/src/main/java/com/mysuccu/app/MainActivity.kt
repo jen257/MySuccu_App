@@ -4,18 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.mysuccu.app.ui.home.HomeScreen
+import com.mysuccu.app.ui.screens.PlantDetailScreen
 import com.mysuccu.app.ui.screens.SplashScreen
 import com.mysuccu.app.ui.theme.MySuccuAppTheme
 
@@ -25,35 +19,42 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MySuccuAppTheme {
+                // 1. 启动页状态管理
                 var isSplashFinished by remember { mutableStateOf(false) }
+
+                // 2. 页面导航状态管理 (临时方案，用于 UI 测试)
+                // "home" 代表首页, "detail" 代表详情页
+                var currentScreen by remember { mutableStateOf("home") }
+
                 if (!isSplashFinished) {
-                    // 如果没结束，就展示我们的全屏启动页
+                    // 展示启动页
                     SplashScreen(
                         onSplashFinished = {
                             isSplashFinished = true
                         }
                     )
                 } else {
-                    // 状态变成 true 后，无缝切换到我们刚刚画好的 3x3 首页！
-                    HomeScreen()
+                    // 启动页结束后，根据 currentScreen 决定展示哪个 UI 界面
+                    when (currentScreen) {
+                        "home" -> {
+                            HomeScreen(
+                                onPlantClick = {
+                                    // 当点击首页的任何多肉卡片时，跳转到详情
+                                    currentScreen = "detail"
+                                }
+                            )
+                        }
+                        "detail" -> {
+                            PlantDetailScreen(
+                                onBack = {
+                                    // 点击返回按钮，回到首页
+                                    currentScreen = "home"
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MySuccuAppTheme {
-        Greeting("Android")
     }
 }
