@@ -1,3 +1,89 @@
 <resources>
-    <string name="app_name">MySuccu_App</string>
+    <string name="app_name">My Succu</string>
+    <string name="loading">Loading...</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="remove">Remove</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="batch_operation">Batch Edit</string>
+    <string name="batch_select_all">Select All</string>
+
+    <string name="nav_home">Garden</string>
+    <string name="nav_calendar">Calendar</string>
+    <string name="nav_weather">Weather</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_profile">Profile</string>
+
+    <string name="sort_latest_water">Latest Watered</string>
+    <string name="sort_newest_add">Newest Added</string>
+    <string name="sort_price_high">Price: High to Low</string>
+    <string name="search_hint">Search by name or category...</string>
+    <string name="days_format">%1$d days</string>
+    <string name="filter_all">All Collections</string>
+    <string name="filter_aizoaceae">Aizoaceae</string>
+
+    <string name="empty_plant_title">Your garden is empty</string>
+    <string name="empty_plant_desc">Tap the + icon in the bottom right to welcome your first succulent!</string>
+
+    <string name="action_water">Water</string>
+    <string name="action_fertilize">Fertilize</string>
+    <string name="action_repot">Repot / Change Soil</string>
+    <string name="action_trim_roots">Trim Roots</string>
+    <string name="action_medicine">Pest Control / Meds</string>
+    <string name="action_prune">Prune Leaves</string>
+    <string name="action_photo">Take Photo</string>
+    <string name="template_water_fertilize">1-Tap Water + Fertilize</string>
+
+    <string name="plant_name_hint">Give it a name (e.g., Ice Berry)</string>
+    <string name="plant_category">Category / Genus</string>
+    <string name="plant_arrive_date">Arrival Date</string>
+    <string name="plant_cost_total">Total Cost</string>
+    <string name="plant_cost_plant">Plant Cost</string>
+    <string name="plant_cost_pot">Pot Cost</string>
+    <string name="plant_cost_soil">Soil Cost</string>
+
+    <string name="status_healthy">Healthy</string>
+    <string name="status_warning">Needs Attention</string>
+    <string name="status_danger">Sick / Rotting</string>
+    <string name="status_dead">R.I.P. (Tombstone)</string>
+    <string name="status_sold">Sold / Gifted</string>
+
+    <string name="milestone_title">Growth Milestones</string>
+    <string name="milestone_sprout">Sprouted Pups</string>
+    <string name="milestone_new_leaf">New Leaves</string>
+    <string name="milestone_color">Coloring Up</string>
+    <string name="milestone_cluster">Clustering</string>
+
+    <string name="stat_total_plants">Total Plants</string>
+    <string name="stat_survival_rate">Survival Rate</string>
+    <string name="stat_most_expensive">Most Expensive</string>
+    <string name="stat_oldest">Oldest Succulent</string>
+
+    <string name="alert_high_temp">High Temp Alert: Please ensure shading and ventilation.</string>
+    <string name="alert_heavy_rain">Heavy Rain Alert: Please protect outdoor succulents from rain.</string>
+    <string name="alert_frost">Frost Alert: Please move indoors to keep warm.</string>
+
+    <string name="settings_account">Account Management</string>
+    <string name="settings_sync">Cloud Sync (Supabase)</string>
+    <string name="settings_export">Export Backup (CSV/JSON)</string>
+    <string name="settings_theme">Appearance &amp; Themes</string>
+    <string name="settings_pro_title">Upgrade to Pro</string>
+    <string name="settings_pro_desc">Unlock unlimited capacity and 9 premium succulent color palettes.</string>
+    <string name="settings_about">About &amp; Feedback</string>
+    <string name="settings_logout">Log Out</string>
+
+    <string name="login_wechat">WeChat Login</string>
+    <string name="login_phone">Phone Verification</string>
+    <string name="login_email">Email &amp; Password</string>
+    <string name="limit_free_reached">Garden Full: Free tier allows tracking up to 20 succulents.</string>
+    <string name="limit_photo_reached">Album Full: Free tier allows up to 20 photos per plant.</string>
+
+    <string name="permission_camera_title">Camera Access Required</string>
+    <string name="permission_camera_desc">We need camera access to take beautiful photos of your succulents.</string>
+    <string name="permission_location_title">Location Access Required</string>
+    <string name="permission_location_desc">Please allow location access to get local weather forecasts and microclimate alerts.</string>
+    <string name="permission_grant">Grant Access</string>
+    <string name="permission_deny">Not Now</string>
 </resources>

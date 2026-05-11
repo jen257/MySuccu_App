@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">我的多肉档案</string>
+    <string name="loading">加载中...</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="remove">移除</string>
+    <string name="add">添加</string>
+    <string name="edit">编辑</string>
+    <string name="batch_operation">批量操作</string>
+    <string name="batch_select_all">全选</string>
+
+    <string name="nav_home">花园</string>
+    <string name="nav_calendar">日历</string>
+    <string name="nav_weather">天气</string>
+    <string name="nav_settings">设置</string>
+    <string name="nav_profile">我的</string>
+
+    <string name="sort_latest_water">最近浇水</string>
+    <string name="sort_newest_add">最新添加</string>
+    <string name="sort_price_high">价格高低</string>
+    <string name="search_hint">搜索多肉名称或分类...</string>
+    <string name="days_format">%1$d 天</string>
+    <string name="filter_all">全部多肉</string>
+    <string name="filter_aizoaceae">番杏科</string>
+
+    <string name="empty_plant_title">花园里空空如也</string>
+    <string name="empty_plant_desc">点击右下角 + 号，迎接你的第一盆多肉吧！</string>
+
+    <string name="action_water">浇水</string>
+    <string name="action_fertilize">施肥</string>
+    <string name="action_repot">换土/换盆</string>
+    <string name="action_trim_roots">修根</string>
+    <string name="action_medicine">用药/杀虫</string>
+    <string name="action_prune">修剪枯叶</string>
+    <string name="action_photo">拍照记录</string>
+    <string name="template_water_fertilize">一键浇水+施肥</string>
+
+    <string name="plant_name_hint">给它起个名字吧 (如: 冰玉)</string>
+    <string name="plant_category">科属分类</string>
+    <string name="plant_arrive_date">到家日期</string>
+    <string name="plant_cost_total">总计花费</string>
+    <string name="plant_cost_plant">肉价</string>
+    <string name="plant_cost_pot">盆价</string>
+    <string name="plant_cost_soil">土价</string>
+
+    <string name="status_healthy">健康生长</string>
+    <string name="status_warning">状态不佳</string>
+    <string name="status_danger">生病 / 化水</string>
+    <string name="status_dead">已阵亡 (生成墓碑)</string>
+    <string name="status_sold">已出坑 / 送人</string>
+
+    <string name="milestone_title">成长里程碑</string>
+    <string name="milestone_sprout">爆侧芽</string>
+    <string name="milestone_new_leaf">新叶萌发</string>
+    <string name="milestone_color">上色</string>
+    <string name="milestone_cluster">群生</string>
+
+    <string name="stat_total_plants">植物总数</string>
+    <string name="stat_survival_rate">整体存活率</string>
+    <string name="stat_most_expensive">最贵多肉</string>
+    <string name="stat_oldest">养护最久元老</string>
+
+    <string name="alert_high_temp">高温预警：请注意遮阳通风</string>
+    <string name="alert_heavy_rain">暴雨预警：露养多肉请注意避雨</string>
+    <string name="alert_frost">霜冻预警：请移至室内保暖</string>
+
+    <string name="settings_account">账号管理</string>
+    <string name="settings_sync">云端静默同步 (Supabase)</string>
+    <string name="settings_export">导出本地备份 (CSV/JSON)</string>
+    <string name="settings_theme">外观与色卡主题</string>
+    <string name="settings_pro_title">升级 Pro 会员</string>
+    <string name="settings_pro_desc">解锁无限容量与 9 组高定多肉色卡</string>
+    <string name="settings_about">关于与反馈</string>
+    <string name="settings_logout">退出登录</string>
+
+    <string name="login_wechat">微信快捷登录</string>
+    <string name="login_phone">手机验证码</string>
+    <string name="login_email">邮箱密码</string>
+    <string name="limit_free_reached">花园已满：免费额度最多记录 20 盆多肉</string>
+    <string name="limit_photo_reached">相册已满：免费额度单盆最多上传 20 张照片</string>
+
+    <string name="permission_camera_title">需要相机权限</string>
+    <string name="permission_camera_desc">为了给多肉拍下美美的定妆照，我们需要使用你的相机哦。</string>
+    <string name="permission_location_title">需要定位权限</string>
+    <string name="permission_location_desc">为了获取所在地的和风天气预报与微气候预警，请允许获取位置信息。</string>
+    <string name="permission_grant">去授权</string>
+    <string name="permission_deny">暂时不要</string>
+</resources>
