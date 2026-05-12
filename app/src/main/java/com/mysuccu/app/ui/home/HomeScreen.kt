@@ -30,21 +30,18 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onPlantClick: () -> Unit) {
+// 🚀 注意看这里：新增了 onNavigateToWeather 参数
+fun HomeScreen(onPlantClick: () -> Unit, onNavigateToWeather: () -> Unit) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     var isLoading by remember { mutableStateOf(true) }
 
-    // 🚀 动态的文件夹层级路径 (模拟用户当前所在的 科 > 属 > 品种)
-    // 实际开发中，这会从 ViewModel 获取，比如用户点击了某个分类后，往这个 list 里 add 一级
     val currentFolderPath = remember { mutableStateListOf(R.string.filter_all.toString(), "番杏科", "肉锥属", "安珍") }
 
     LaunchedEffect(Unit) {
         delay(300)
         isLoading = false
-        // 因为 R.string.filter_all 需要 context，初始化时如果拿到的是资源 ID 的 string 形式，
-        // 这里可以做个简单的文本替换，演示用直接写 "全部多肉"
         currentFolderPath[0] = "全部多肉"
     }
 
@@ -71,7 +68,6 @@ fun HomeScreen(onPlantClick: () -> Unit) {
                     }
                 },
                 actions = {
-                    // 🚀 筛选：用于处理价格、天数等属性过滤
                     IconButton(onClick = {
                         scope.launch { snackbarHostState.showSnackbar("打开高级筛选: 天数、价格等") }
                     }) {
@@ -82,7 +78,6 @@ fun HomeScreen(onPlantClick: () -> Unit) {
                             modifier = Modifier.size(24.dp)
                         )
                     }
-                    // 🚀 搜索：用于输入关键词搜索多肉名字或标签
                     IconButton(onClick = {
                         scope.launch { snackbarHostState.showSnackbar("打开搜索栏: 搜索肉肉名字或标签") }
                     }) {
@@ -116,7 +111,7 @@ fun HomeScreen(onPlantClick: () -> Unit) {
                 )
                 NavigationBarItem(
                     selected = false,
-                    onClick = { },
+                    onClick = onNavigateToWeather, // 🚀 绑定了跳转天气的点击事件
                     icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) },
                     label = { Text(stringResource(id = R.string.nav_weather)) }
                 )
@@ -146,8 +141,6 @@ fun HomeScreen(onPlantClick: () -> Unit) {
         }
     ) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 16.dp)) {
-
-            // 🚀 动态横向滑动分类栏 (Breadcrumbs Navigation)
             if (isLoading) {
                 Box(Modifier.padding(vertical = 12.dp).height(32.dp).width(120.dp).clip(RoundedCornerShape(50)).shimmerEffect())
             } else {
@@ -160,19 +153,16 @@ fun HomeScreen(onPlantClick: () -> Unit) {
 
                         SuggestionChip(
                             onClick = {
-                                // TODO: 点击后，截断路径到当前层级，并刷新列表
                                 scope.launch { snackbarHostState.showSnackbar("返回到层级: $folderName") }
                             },
                             label = { Text(folderName) },
                             colors = SuggestionChipDefaults.suggestionChipColors(
-                                // 最后一级（当前所在层级）高亮显示
                                 containerColor = if (isLastItem) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
                                 labelColor = if (isLastItem) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
                             ),
                             border = if (isLastItem) null else SuggestionChipDefaults.suggestionChipBorder(enabled = true)
                         )
 
-                        // 不是最后一个元素时，绘制 ">" 分隔符 (已替换为基础库自带的图标)
                         if (!isLastItem) {
                             Icon(
                                 imageVector = Icons.Default.KeyboardArrowRight,
@@ -185,7 +175,6 @@ fun HomeScreen(onPlantClick: () -> Unit) {
                 }
             }
 
-            // 3x3 植物网格
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -222,8 +211,6 @@ fun HomeScreen(onPlantClick: () -> Unit) {
                             modifier = Modifier.clickable { onPlantClick() }
                         )
                     }
-
-                    // 始终在末尾显示添加卡片
                     item { AddPlantCard() }
                 }
             }

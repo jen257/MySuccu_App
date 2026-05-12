@@ -11,6 +11,7 @@ import androidx.compose.runtime.setValue
 import com.mysuccu.app.ui.home.HomeScreen
 import com.mysuccu.app.ui.screens.PlantDetailScreen
 import com.mysuccu.app.ui.screens.SplashScreen
+import com.mysuccu.app.ui.screens.WeatherScreen // 🚀 别忘了导入天气页面
 import com.mysuccu.app.ui.theme.MySuccuAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,34 +23,32 @@ class MainActivity : ComponentActivity() {
                 // 1. 启动页状态管理
                 var isSplashFinished by remember { mutableStateOf(false) }
 
-                // 2. 页面导航状态管理 (临时方案，用于 UI 测试)
-                // "home" 代表首页, "detail" 代表详情页
+                // 2. 页面导航状态管理
+                // 新增 "weather" 状态
                 var currentScreen by remember { mutableStateOf("home") }
 
                 if (!isSplashFinished) {
-                    // 展示启动页
                     SplashScreen(
-                        onSplashFinished = {
-                            isSplashFinished = true
-                        }
+                        onSplashFinished = { isSplashFinished = true }
                     )
                 } else {
-                    // 启动页结束后，根据 currentScreen 决定展示哪个 UI 界面
                     when (currentScreen) {
                         "home" -> {
                             HomeScreen(
-                                onPlantClick = {
-                                    // 当点击首页的任何多肉卡片时，跳转到详情
-                                    currentScreen = "detail"
-                                }
+                                onPlantClick = { currentScreen = "detail" },
+                                // 🚀 告诉首页：当点击底部天气按钮时，把状态切到天气
+                                onNavigateToWeather = { currentScreen = "weather" }
                             )
                         }
                         "detail" -> {
                             PlantDetailScreen(
-                                onBack = {
-                                    // 点击返回按钮，回到首页
-                                    currentScreen = "home"
-                                }
+                                onBack = { currentScreen = "home" }
+                            )
+                        }
+                        "weather" -> {
+                            WeatherScreen(
+                                // 🚀 告诉天气页：当点击底部首页按钮时，把状态切回首页
+                                onNavigateToHome = { currentScreen = "home" }
                             )
                         }
                     }

@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
 import kotlinx.coroutines.launch
 
-// 🚀 自定义绘制真正的虚线边框
 fun Modifier.dashedBorder(color: Color, cornerRadius: Dp) = this.drawBehind {
     drawRoundRect(
         color = color,
@@ -66,14 +65,14 @@ fun PlantDetailScreen(onBack: () -> Unit) {
     var tagMenuExpandedItem by remember { mutableStateOf<String?>(null) }
     var folderMenuExpandedItem by remember { mutableStateOf<String?>(null) }
 
-    // 🚀 核心状态数据
+    //  核心状态数据
     var plantName by remember { mutableStateOf("") }
     var currencySymbol by remember { mutableStateOf("￥") }
     val folders = remember { mutableStateListOf("番杏科", "肉锥属", "安珍") }
     val tags = remember { mutableStateListOf("2026播种", "精品", "待换盆") }
     var hasImages by remember { mutableStateOf(false) }
 
-    // 🚀 养护时长 (此处模拟从首页传递进来的 120 天，后续由上盆日期计算得出)
+    // 养护时长 (此处模拟从首页传递进来的 120 天，后续由上盆日期计算得出)
     var careDays by remember { mutableIntStateOf(120) }
 
     // 汇率选项
@@ -163,7 +162,7 @@ fun PlantDetailScreen(onBack: () -> Unit) {
                             // 数据网格
                             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(12.dp)) {
-                                    // 🚀 养护时长联动多语言资源，并根据 careDays 动态显示
+                                    // 养护时长联动多语言资源，并根据 careDays 动态显示
                                     DetailStatItem(
                                         modifier = Modifier.weight(1f),
                                         painter = painterResource(R.drawable.ic_daysl_custom),
@@ -326,8 +325,6 @@ fun PlantDetailScreen(onBack: () -> Unit) {
             items(count = 2) { index -> DetailTimelineItem(title = if(index == 0) stringResource(R.string.action_water) else stringResource(R.string.action_fertilize), date = stringResource(R.string.days_ago_format, index + 3), content = "", isLatest = false, isLast = index == 1, painter = if(index == 0) painterResource(R.drawable.ic_water_drop_custom) else painterResource(R.drawable.ic_fertilize_custom)) }
             item { Spacer(Modifier.height(120.dp)) }
         }
-
-        // --- 底部弹窗区域 ---
         if (showCareSheet) {
             ModalBottomSheet(onDismissRequest = { showCareSheet = false }, sheetState = sheetState) {
                 LogCareBottomSheetContent(

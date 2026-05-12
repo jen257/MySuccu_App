@@ -16,7 +16,7 @@
     <string name="nav_weather">天气</string>
     <string name="nav_settings">设置</string>
     <string name="nav_profile">我的</string>
-    <string name="onboarding_title">快来给你的肉肉上户口啦~</string>
+    <string name="onboarding_title">快来给你的肉肉上户口啦 ~ </string>
 
     <string name="sort_latest_water">最近浇水</string>
     <string name="sort_newest_add">最新添加</string>
@@ -119,4 +119,61 @@
     <string name="edit_folder">打开层级编辑器: %1$s</string>
     <string name="record_action">已记录: %1$s</string>
     <string name="manage_action">操作: %1$s</string>
+
+    <string name="weather_title">天气与智能建议</string>
+    <string name="weather_location_mock">旧金山, CA</string>
+    <string name="weather_humidity">湿度</string>
+    <string name="weather_season">季节</string>
+    <string name="weather_uv_index">紫外线</string>
+    <string name="weather_uv_high">高</string>
+
+    <string name="weather_my_environment">我的环境</string>
+    <string name="env_closed_balcony">封闭阳台</string>
+    <string name="env_closed_balcony_desc">玻璃过滤了约30%的直射紫外线。通风较差。</string>
+
+    <string name="weather_insight_title">智能养护洞察</string>
+    <string name="weather_insight_desc_hot">今天非常炎热，最高达 35°C。你的“景天科”多肉需要移动到散光处避暑，以防晒伤。</string>
+    <string name="weather_actions_title">今日待办建议</string>
+    <string name="action_shade_needed">需要遮阳</string>
+    <string name="action_shade_desc">下午 12点 - 4点 期间，将脆弱品种移离玻璃直射区。</string>
+    <string name="action_avoid_water">暂缓浇水</string>
+    <string name="action_avoid_water_desc">高温期间浇水易导致黑腐化水。请等到傍晚降温后。</string>
+    <string name="action_ventilate">加强通风</string>
+    <string name="action_ventilate_desc">如果可能的话，打开窗户或风扇以改善空气流通。</string>
+
+    <string name="weather_forecast_title">多肉专属预报</string>
+    <string name="forecast_tomorrow">明天</string>
+    <string name="forecast_yesterday">昨天</string>
+    <string name="forecast_sun">周日</string>
+    <string name="forecast_mon">周一</string>
+    <string name="forecast_tue">周二</string>
+    <string name="forecast_wed">周三</string>
+    <string name="forecast_thu">周四</string>
+    <string name="forecast_fri">周五</string>
+    <string name="forecast_sat">周六</string>
+
+    <string name="tag_watering_window">浇水窗口</string>
+    <string name="tag_optimal">状态极佳</string>
+    <string name="tag_high_humidity">高湿预警</string>
+    <string name="tag_monitor_soil">监测土壤</string>
+
+    <string name="weather_hourly_forecast">24小时预报</string>
+    <string name="forecast_now">现在</string>
+    <string name="season_spring">春季</string>
+    <string name="season_summer">夏季</string>
+    <string name="season_autumn">秋季</string>
+    <string name="season_winter">冬季</string>
+
+    <string name="warning_take_inside">移至室内</string>
+    <string name="warning_physical_damage">物理防砸</string>
+    <string name="warning_frost">霜冻警告</string>
+
+    <string name="filter_conophytum">肉锥属</string>
+    <string name="filter_burgeri">安珍</string>
+
+    <string name="msg_open_filter">打开高级筛选</string>
+    <string name="msg_open_search">打开搜索栏</string>
+    <string name="msg_return_level">返回到层级: %1$s</string>
+    <string name="msg_add_tag">添加新标签</string>
+    <string name="msg_add_folder">新增分类文件夹</string>
 </resources>

@@ -1,35 +1,53 @@
 package com.mysuccu.app.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
+import kotlinx.coroutines.delay
+
+// 🚀 1. 定义数据类，将可见性状态与数据绑定，解决一块删除的问题
+data class WeatherActionItem(
+    val iconRes: Int,
+    val titleRes: Int,
+    val descRes: Int,
+    val isVisible: MutableState<Boolean> = mutableStateOf(true)
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherScreen() {
+fun WeatherScreen(onNavigateToHome: () -> Unit) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        // 占位头像，实际开发中替换为 Coil/Glide 网络图片加载
                         Box(
                             modifier = Modifier
                                 .size(32.dp)
@@ -38,7 +56,7 @@ fun WeatherScreen() {
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = stringResource(id = R.string.app_name),
+                            text = stringResource(id = R.string.weather_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
@@ -66,7 +84,7 @@ fun WeatherScreen() {
             ) {
                 NavigationBarItem(
                     selected = false,
-                    onClick = { /* TODO: 返回 Home */ },
+                    onClick = onNavigateToHome,
                     icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) },
                     label = { Text(stringResource(id = R.string.nav_home)) }
                 )
@@ -103,16 +121,10 @@ fun WeatherScreen() {
             contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // 1. 英雄区域：当前天气 & 环境设置
             item { HeroWeatherSection() }
-
-            // 2. AI 智能养护建议卡片
+            item { HourlyForecastSection() }
             item { AiInsightCard() }
-
-            // 3. 今日待办建议 (Checklist)
             item { ActionChecklistSection() }
-
-            // 4. 多肉专属 7天天气预报
             item { ForecastSection() }
         }
     }
@@ -121,7 +133,6 @@ fun WeatherScreen() {
 @Composable
 fun HeroWeatherSection() {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        // 当前天气卡片
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
@@ -137,7 +148,7 @@ fun HeroWeatherSection() {
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = Icons.Default.LocationOn,
+                                painter = painterResource(id = R.drawable.map_pin_line),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(16.dp)
@@ -149,20 +160,34 @@ fun HeroWeatherSection() {
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Text(
-                            text = "35°C",
-                            style = MaterialTheme.typography.displayMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
+
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+                            Text(
+                                text = "35°C",
+                                style = MaterialTheme.typography.displayMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(Modifier.width(16.dp))
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(painterResource(id = R.drawable.temp_hot_line), null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(16.dp))
+                                    Spacer(Modifier.width(4.dp))
+                                    Text("38°", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(painterResource(id = R.drawable.temp_cold_line), null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                                    Spacer(Modifier.width(4.dp))
+                                    Text("22°", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                            }
+                        }
                     }
-                    // 实际开发中替换为天气状态图标
                     Icon(
-                        imageVector = Icons.Default.WbSunny,
+                        painter = painterResource(id = R.drawable.sun_line),
                         contentDescription = "Sunny",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(48.dp)
+                        modifier = Modifier.size(56.dp)
                     )
                 }
 
@@ -170,7 +195,7 @@ fun HeroWeatherSection() {
 
                 Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                     WeatherStat(stringResource(R.string.weather_humidity), "45%")
-                    WeatherStat(stringResource(R.string.weather_season), "Summer")
+                    WeatherStat(stringResource(R.string.weather_season), stringResource(R.string.season_summer))
                     WeatherStat(
                         stringResource(R.string.weather_uv_index),
                         stringResource(R.string.weather_uv_high),
@@ -180,7 +205,6 @@ fun HeroWeatherSection() {
             }
         }
 
-        // 微环境设置卡片
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
@@ -239,6 +263,63 @@ fun HeroWeatherSection() {
 }
 
 @Composable
+fun HourlyForecastSection() {
+    Column {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 12.dp)) {
+            Icon(
+                painter = painterResource(id = R.drawable.time_line),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = stringResource(R.string.weather_hourly_forecast),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            color = MaterialTheme.colorScheme.surface,
+            shadowElevation = 2.dp
+        ) {
+            val nowText = stringResource(R.string.forecast_now)
+            val hourlyData = remember(nowText) {
+                listOf(
+                    Triple(nowText, R.drawable.cloudy_line, "35°"),
+                    Triple("18:00", R.drawable.cloud_windy_line, "32°"),
+                    Triple("20:00", R.drawable.moon_line, "28°"),
+                    Triple("22:00", R.drawable.moon_cloudy_line, "25°"),
+                    Triple("00:00", R.drawable.foggy_line, "22°"),
+                    Triple("02:00", R.drawable.drizzle_line, "21°"),
+                    Triple("04:00", R.drawable.rainy_line, "20°")
+                )
+            }
+
+            LazyRow(
+                contentPadding = PaddingValues(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                items(hourlyData) { (time, iconRes, temp) ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(text = time, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Icon(painterResource(id = iconRes), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
+                        Text(text = temp, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun AiInsightCard() {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -258,7 +339,7 @@ fun AiInsightCard() {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Star,
+                    painter = painterResource(id = R.drawable.lightbulb_ai_line),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(28.dp)
@@ -272,7 +353,6 @@ fun AiInsightCard() {
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                // 实际开发中可以通过 buildAnnotatedString 处理富文本(加粗部分)
                 Text(
                     text = stringResource(R.string.weather_insight_desc_hot),
                     style = MaterialTheme.typography.bodyLarge,
@@ -284,11 +364,26 @@ fun AiInsightCard() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActionChecklistSection() {
+    // 🚀 使用包装对象列表，确保状态隔离
+    val actions = remember {
+        mutableStateListOf(
+            WeatherActionItem(R.drawable.sun_cloudy_line, R.string.action_shade_needed, R.string.action_shade_desc),
+            WeatherActionItem(R.drawable.ic_water_drop_custom, R.string.action_avoid_water, R.string.action_avoid_water_desc),
+            WeatherActionItem(R.drawable.windy_line, R.string.action_ventilate, R.string.action_ventilate_desc)
+        )
+    }
+
     Column {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 16.dp)) {
-            Icon(Icons.Default.List, null, tint = MaterialTheme.colorScheme.primary)
+            Icon(
+                painter = painterResource(id = R.drawable.sparkling_2_line),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
             Spacer(Modifier.width(8.dp))
             Text(
                 text = stringResource(R.string.weather_actions_title),
@@ -299,25 +394,57 @@ fun ActionChecklistSection() {
         }
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            ActionCard(
-                icon = Icons.Default.Cloud,
-                title = stringResource(R.string.action_shade_needed),
-                desc = stringResource(R.string.action_shade_desc),
-                borderColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-            // 这里借用自定义的浇水图标
-            ActionCard(
-                iconPainter = painterResource(R.drawable.ic_water_drop_custom),
-                title = stringResource(R.string.action_avoid_water),
-                desc = stringResource(R.string.action_avoid_water_desc),
-                borderColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-            ActionCard(
-                icon = Icons.Default.Air,
-                title = stringResource(R.string.action_ventilate),
-                desc = stringResource(R.string.action_ventilate_desc),
-                borderColor = MaterialTheme.colorScheme.primary
-            )
+            actions.forEach { action ->
+                // 🚀 核心 1：通过 key 锁定 ID，解决一块删除的问题
+                key(action.titleRes) {
+                    AnimatedVisibility(
+                        visible = action.isVisible.value,
+                        exit = shrinkVertically(animationSpec = tween(300)) + fadeOut()
+                    ) {
+                        val dismissState = rememberSwipeToDismissBoxState(
+                            confirmValueChange = {
+                                if (it == SwipeToDismissBoxValue.EndToStart) {
+                                    action.isVisible.value = false // 触发视觉动画
+                                    true
+                                } else false
+                            }
+                        )
+
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            enableDismissFromStartToEnd = false,
+                            backgroundContent = {
+                                val color = if (dismissState.dismissDirection == SwipeToDismissBoxValue.EndToStart) {
+                                    MaterialTheme.colorScheme.errorContainer
+                                } else Color.Transparent
+                                Box(
+                                    Modifier.fillMaxSize().clip(RoundedCornerShape(12.dp)).background(color).padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    Icon(painterResource(id = R.drawable.ic_delete_custom), null, tint = MaterialTheme.colorScheme.error)
+                                }
+                            }
+                        ) {
+                            ActionCard(
+                                iconPainter = painterResource(id = action.iconRes),
+                                title = stringResource(action.titleRes),
+                                desc = stringResource(action.descRes),
+                                borderColor = if (action.titleRes == R.string.action_ventilate) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.secondaryContainer,
+                                onLongClick = { action.isVisible.value = false }
+                            )
+                        }
+                    }
+
+                    // 🚀 核心 2：延迟清理数据，解决卡顿
+                    LaunchedEffect(action.isVisible.value) {
+                        if (!action.isVisible.value) {
+                            delay(350) // 等待动画播完
+                            actions.remove(action) // 静默移除数据源
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -343,19 +470,19 @@ fun ForecastSection() {
             shadowElevation = 2.dp
         ) {
             Column(modifier = Modifier.padding(20.dp)) {
-                ForecastRow(stringResource(R.string.forecast_tomorrow), Icons.Default.WbSunny, "32°", stringResource(R.string.tag_watering_window), isPrimaryTag = true)
+                ForecastRow(stringResource(R.string.forecast_tomorrow), painterResource(R.drawable.heavy_showers_line), "22°", stringResource(R.string.tag_high_humidity), isSecondaryTag = true)
                 HorizontalDivider(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-                ForecastRow(stringResource(R.string.forecast_wed), Icons.Default.Cloud, "28°", stringResource(R.string.tag_optimal), isTextTag = true)
+                ForecastRow(stringResource(R.string.forecast_wed), painterResource(R.drawable.thunderstorms_line), "20°", stringResource(R.string.warning_take_inside), isPrimaryTag = true)
                 HorizontalDivider(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-                ForecastRow(stringResource(R.string.forecast_thu), Icons.Default.Warning, "24°", stringResource(R.string.tag_high_humidity), isSecondaryTag = true)
+                ForecastRow(stringResource(R.string.forecast_thu), painterResource(R.drawable.hail_line), "15°", stringResource(R.string.warning_physical_damage), isSecondaryTag = true)
                 HorizontalDivider(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-                ForecastRow(stringResource(R.string.forecast_fri), Icons.Default.Cloud, "25°", stringResource(R.string.tag_monitor_soil), isTextTag = true, isOutline = true)
+                ForecastRow(stringResource(R.string.forecast_fri), painterResource(R.drawable.snowy_line), "5°", stringResource(R.string.warning_frost), isPrimaryTag = true)
+                HorizontalDivider(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+                ForecastRow(stringResource(R.string.forecast_sat), painterResource(R.drawable.showers_line), "18°", stringResource(R.string.tag_monitor_soil), isTextTag = true, isOutline = true)
             }
         }
     }
 }
-
-// === 辅助复用组件 ===
 
 @Composable
 fun WeatherStat(label: String, value: String, isHighlight: Boolean = false) {
@@ -370,29 +497,30 @@ fun WeatherStat(label: String, value: String, isHighlight: Boolean = false) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ActionCard(
-    icon: ImageVector? = null,
-    iconPainter: Painter? = null,
+    iconPainter: Painter,
     title: String,
     desc: String,
-    borderColor: androidx.compose.ui.graphics.Color
+    borderColor: androidx.compose.ui.graphics.Color,
+    onLongClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = { /* TODO: 查看建议详情 */ },
+                onLongClick = onLongClick
+            ),
         shape = RoundedCornerShape(12.dp),
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 1.dp
     ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-            // 左侧状态装饰条
             Box(modifier = Modifier.fillMaxHeight().width(4.dp).background(borderColor))
             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.Top) {
-                if (icon != null) {
-                    Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
-                } else if (iconPainter != null) {
-                    Icon(iconPainter, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
-                }
+                Icon(iconPainter, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                 Spacer(Modifier.width(16.dp))
                 Column {
                     Text(text = title, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
@@ -406,7 +534,7 @@ fun ActionCard(
 @Composable
 fun ForecastRow(
     day: String,
-    icon: ImageVector,
+    iconPainter: Painter,
     temp: String,
     tag: String,
     isPrimaryTag: Boolean = false,
@@ -422,13 +550,11 @@ fun ForecastRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = day, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.weight(1f))
-
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.Center) {
-            Icon(icon, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp))
+            Icon(iconPainter, null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
             Spacer(Modifier.width(8.dp))
             Text(text = temp, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-
         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterEnd) {
             if (isTextTag) {
                 Text(
@@ -439,14 +565,14 @@ fun ForecastRow(
                 )
             } else {
                 Surface(
-                    color = if (isPrimaryTag) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
+                    color = if (isPrimaryTag) MaterialTheme.colorScheme.primary else if (isSecondaryTag) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant,
                     shape = CircleShape
                 ) {
                     Text(
                         text = tag,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
-                        color = if (isPrimaryTag) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = if (isPrimaryTag) MaterialTheme.colorScheme.onPrimary else if (isSecondaryTag) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
                 }

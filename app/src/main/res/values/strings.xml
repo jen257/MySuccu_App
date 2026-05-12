@@ -119,4 +119,62 @@
     <string name="edit_folder">Open folder editor: %1$s</string>
     <string name="record_action">Recorded: %1$s</string>
     <string name="manage_action">Action: %1$s</string>
+
+    <string name="weather_title">Weather &amp; AI Advice</string>
+    <string name="weather_location_mock">San Francisco, CA</string>
+    <string name="weather_humidity">Humidity</string>
+    <string name="weather_season">Season</string>
+    <string name="weather_uv_index">UV Index</string>
+    <string name="weather_uv_high">High</string>
+
+    <string name="weather_my_environment">My Environment</string>
+    <string name="env_closed_balcony">Closed Balcony</string>
+    <string name="env_closed_balcony_desc">Glass filters 30% of direct UV. Poor air circulation.</string>
+
+    <string name="weather_insight_title">Smart Care Insight</string>
+    <string name="weather_insight_desc_hot">Today is exceptionally hot at 35°C. Your \"Sedum\" plants should be moved to a shaded area with indirect light to prevent sunburn.</string>
+
+    <string name="weather_actions_title">Today\'s Actions</string>
+    <string name="action_shade_needed">Shade Needed</string>
+    <string name="action_shade_desc">Move sensitive varieties away from the glass between 12 PM - 4 PM.</string>
+    <string name="action_avoid_water">Avoid Watering</string>
+    <string name="action_avoid_water_desc">High temps risk root rot if watered during the day. Wait for evening.</string>
+    <string name="action_ventilate">Ventilate</string>
+    <string name="action_ventilate_desc">Open a window if possible to improve air circulation.</string>
+
+    <string name="weather_forecast_title">Succulent Forecast</string>
+    <string name="forecast_tomorrow">Tomorrow</string>
+    <string name="forecast_yesterday">Yesterday</string>
+    <string name="forecast_sun">Sun</string>
+    <string name="forecast_mon">Mon</string>
+    <string name="forecast_tue">Tue</string>
+    <string name="forecast_wed">Wed</string>
+    <string name="forecast_thu">Thu</string>
+    <string name="forecast_fri">Fri</string>
+    <string name="forecast_sat">Sat</string>
+
+    <string name="tag_watering_window">Watering Window</string>
+    <string name="tag_optimal">Optimal</string>
+    <string name="tag_high_humidity">High Humidity</string>
+    <string name="tag_monitor_soil">Monitor Soil</string>
+
+    <string name="weather_hourly_forecast">24 Hour Forecast</string>
+    <string name="forecast_now">Now</string>
+    <string name="season_spring">Spring</string>
+    <string name="season_summer">Summer</string>
+    <string name="season_autumn">Autumn</string>
+    <string name="season_winter">Winter</string>
+
+    <string name="warning_take_inside">Move to Indoor</string>
+    <string name="warning_physical_damage">Protect from Damage</string>
+    <string name="warning_frost">Frost Warning</string>
+
+    <string name="filter_conophytum">Conophytum</string>
+    <string name="filter_burgeri">Burgeri</string>
+
+    <string name="msg_open_filter">Open advanced filters</string>
+    <string name="msg_open_search">Open search bar</string>
+    <string name="msg_return_level">Return to level: %1$s</string>
+    <string name="msg_add_tag">Add new tag</string>
+    <string name="msg_add_folder">Add new folder</string>
 </resources>
