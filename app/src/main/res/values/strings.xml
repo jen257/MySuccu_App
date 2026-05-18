@@ -153,6 +153,19 @@
     <string name="forecast_fri">Fri</string>
     <string name="forecast_sat">Sat</string>
 
+    <string name="calendar_title">Care Calendar</string>
+    <string name="stats_watered">Plants Watered</string>
+    <string name="stats_repotted">Re-potted</string>
+    <string name="legend_watering">Watering</string>
+    <string name="legend_fertilizing">Fertilizing</string>
+    <string name="legend_alert">Alert</string>
+    <string name="logs_for_date">Logs for %1$s</string>
+    <string name="mock_month_year">October 2023</string>
+
+    <string name="empty_log_title">No care logs for this day</string>
+    <string name="empty_log_desc">Tap the + button to record your first care action or schedule a reminder.</string>
+    <string name="action_add_log">ADD LOG</string>
+
     <string name="tag_watering_window">Watering Window</string>
     <string name="tag_optimal">Optimal</string>
     <string name="tag_high_humidity">High Humidity</string>

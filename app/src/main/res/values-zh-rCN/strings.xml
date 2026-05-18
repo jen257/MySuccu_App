@@ -152,6 +152,19 @@
     <string name="forecast_fri">周五</string>
     <string name="forecast_sat">周六</string>
 
+    <string name="calendar_title">养护日历</string>
+    <string name="stats_watered">已浇水</string>
+    <string name="stats_repotted">已换盆</string>
+    <string name="legend_watering">浇水</string>
+    <string name="legend_fertilizing">施肥</string>
+    <string name="legend_alert">异常预警</string>
+    <string name="logs_for_date">%1$s 养护日志</string>
+    <string name="mock_month_year">2023年 10月</string>
+
+    <string name="empty_log_title">今日暂无养护记录</string>
+    <string name="empty_log_desc">点击下方按钮记录你的第一次养护，或为肉肉设定一个提醒吧。</string>
+    <string name="action_add_log">添加记录</string>
+
     <string name="tag_watering_window">浇水窗口</string>
     <string name="tag_optimal">状态极佳</string>
     <string name="tag_high_humidity">高湿预警</string>

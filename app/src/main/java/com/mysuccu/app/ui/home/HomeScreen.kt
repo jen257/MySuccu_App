@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items // 🚀 引入 items 循环方法
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,26 +31,23 @@ import com.mysuccu.app.ui.home.components.shimmerEffect
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// 🚀 临时定义一个假数据类，方便我们循环生成 10 个不同的植物
 private data class MockPlant(
-    val name: String,
-    val statusRes: Int,
-    val days: Int,
-    val type: Int // 0: 健康, 1: 警告, 2: 危险
+    val name: String, val statusRes: Int, val days: Int, val type: Int
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onPlantClick: () -> Unit, onNavigateToWeather: () -> Unit) {
+fun HomeScreen(
+    onPlantClick: () -> Unit,
+    onNavigateToWeather: () -> Unit,
+    onNavigateToCalendar: () -> Unit // 🚀 接收跳转日历的事件
+) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-
     var isLoading by remember { mutableStateOf(true) }
     var isRefreshing by remember { mutableStateOf(false) }
 
     val currentFolderPath = remember { mutableStateListOf(R.string.filter_all.toString(), "番杏科", "肉锥属", "安珍") }
-
-    // 🚀 这里是我们生成的 10 个不同的多肉测试数据
     val mockPlants = remember {
         listOf(
             MockPlant("灯泡 Burgeri", R.string.status_healthy, 120, 0),
@@ -66,11 +63,7 @@ fun HomeScreen(onPlantClick: () -> Unit, onNavigateToWeather: () -> Unit) {
         )
     }
 
-    LaunchedEffect(Unit) {
-        delay(300)
-        isLoading = false
-        currentFolderPath[0] = "全部多肉"
-    }
+    LaunchedEffect(Unit) { delay(300); isLoading = false; currentFolderPath[0] = "全部多肉" }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -79,114 +72,54 @@ fun HomeScreen(onPlantClick: () -> Unit, onNavigateToWeather: () -> Unit) {
             TopAppBar(
                 title = {
                     Column {
-                        Text(
-                            text = stringResource(id = R.string.app_name),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        if (!isLoading) {
-                            Text(
-                                text = stringResource(id = R.string.onboarding_title),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                            )
-                        }
+                        Text(text = stringResource(id = R.string.app_name), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                        if (!isLoading) Text(text = stringResource(id = R.string.onboarding_title), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f))
                     }
                 },
                 actions = {
-                    IconButton(onClick = { scope.launch { snackbarHostState.showSnackbar("打开高级筛选: 天数、价格等") } }) {
-                        Icon(painter = painterResource(id = R.drawable.ic_filter_custom), contentDescription = "Filter by price or days", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
-                    }
-                    IconButton(onClick = { scope.launch { snackbarHostState.showSnackbar("打开搜索栏: 搜索肉肉名字或标签") } }) {
-                        Icon(painter = painterResource(id = R.drawable.ic_search_custom), contentDescription = "Search by name or tag", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
-                    }
+                    IconButton(onClick = { scope.launch { snackbarHostState.showSnackbar("打开高级筛选") } }) { Icon(painterResource(id = R.drawable.ic_filter_custom), null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp)) }
+                    IconButton(onClick = { scope.launch { snackbarHostState.showSnackbar("打开搜索栏") } }) { Icon(painterResource(id = R.drawable.ic_search_custom), null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp)) }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
             )
         },
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            ) {
+            NavigationBar(containerColor = MaterialTheme.colorScheme.surface, modifier = Modifier.shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))) {
                 NavigationBarItem(selected = true, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_home)) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary, indicatorColor = MaterialTheme.colorScheme.primaryContainer))
                 NavigationBarItem(selected = false, onClick = onNavigateToWeather, icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_weather)) })
-                NavigationBarItem(selected = false, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_calendar)) })
+                NavigationBarItem(selected = false, onClick = onNavigateToCalendar, icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_calendar)) }) // 🚀 绑定日历跳转
                 NavigationBarItem(selected = false, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_profile)) })
             }
         },
         floatingActionButton = {
-            if (!isLoading) {
-                FloatingActionButton(onClick = { /* TODO: 导航到添加页面 */ }, containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary, shape = CircleShape) { Icon(Icons.Default.Add, null) }
-            }
+            if (!isLoading) FloatingActionButton(onClick = { }, containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary, shape = CircleShape) { Icon(Icons.Default.Add, null) }
         }
     ) { innerPadding ->
         SuccuPullToRefresh(
             isRefreshing = isRefreshing,
-            onRefresh = {
-                isRefreshing = true
-                scope.launch {
-                    delay(1200)
-                    isRefreshing = false
-                }
-            },
+            onRefresh = { isRefreshing = true; scope.launch { delay(1200); isRefreshing = false } },
             modifier = Modifier.padding(innerPadding)
         ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
-                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 100.dp)
-            ) {
-
-                // 🚀 分类面包屑（独占一行）
+            LazyVerticalGrid(columns = GridCells.Fixed(3), modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 100.dp)) {
                 item(span = { GridItemSpan(maxLineSpan) }) {
-                    if (isLoading) {
-                        Box(Modifier.padding(vertical = 12.dp).height(32.dp).width(120.dp).clip(RoundedCornerShape(50)).shimmerEffect())
-                    } else {
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                    if (isLoading) Box(Modifier.padding(vertical = 12.dp).height(32.dp).width(120.dp).clip(RoundedCornerShape(50)).shimmerEffect())
+                    else {
+                        LazyRow(modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                             itemsIndexed(currentFolderPath) { index, folderName ->
                                 val isLastItem = index == currentFolderPath.lastIndex
-
                                 SuggestionChip(
-                                    onClick = { scope.launch { snackbarHostState.showSnackbar("返回到层级: $folderName") } },
-                                    label = { Text(folderName) },
-                                    colors = SuggestionChipDefaults.suggestionChipColors(
-                                        containerColor = if (isLastItem) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-                                        labelColor = if (isLastItem) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
-                                    ),
+                                    onClick = { }, label = { Text(folderName) },
+                                    colors = SuggestionChipDefaults.suggestionChipColors(containerColor = if (isLastItem) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface, labelColor = if (isLastItem) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface),
                                     border = if (isLastItem) null else SuggestionChipDefaults.suggestionChipBorder(enabled = true)
                                 )
-
-                                if (!isLastItem) {
-                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Next Level", modifier = Modifier.padding(horizontal = 4.dp).size(16.dp), tint = MaterialTheme.colorScheme.outline)
-                                }
+                                if (!isLastItem) Icon(Icons.Default.KeyboardArrowRight, null, modifier = Modifier.padding(horizontal = 4.dp).size(16.dp), tint = MaterialTheme.colorScheme.outline)
                             }
                         }
                     }
                 }
-
-                // 🚀 循环渲染 10 个测试卡片
-                if (isLoading) {
-                    items(12) { PlantCard(isLoading = true) } // 骨架屏多加载几个
-                } else {
-                    // 使用 items 遍历数据列表
-                    items(mockPlants) { plant ->
-                        PlantCard(
-                            plantName = plant.name,
-                            statusText = stringResource(id = plant.statusRes),
-                            days = plant.days,
-                            statusType = plant.type,
-                            modifier = Modifier.clickable { onPlantClick() }
-                        )
-                    }
-
-                    // 最后拼上“添加”按钮
+                if (isLoading) items(12) { PlantCard(isLoading = true) }
+                else {
+                    items(mockPlants) { plant -> PlantCard(plantName = plant.name, statusText = stringResource(id = plant.statusRes), days = plant.days, statusType = plant.type, modifier = Modifier.clickable { onPlantClick() }) }
                     item { AddPlantCard() }
                 }
             }

@@ -11,7 +11,8 @@ import androidx.compose.runtime.setValue
 import com.mysuccu.app.ui.home.HomeScreen
 import com.mysuccu.app.ui.archive.PlantDetailScreen
 import com.mysuccu.app.ui.navigation.SplashScreen
-import com.mysuccu.app.ui.weather.WeatherScreen // 🚀 别忘了导入天气页面
+import com.mysuccu.app.ui.weather.WeatherScreen
+import com.mysuccu.app.ui.calendar.CalendarScreen // 🚀 确保导包正确
 import com.mysuccu.app.ui.theme.MySuccuAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,37 +21,30 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MySuccuAppTheme {
-                // 1. 启动页状态管理
                 var isSplashFinished by remember { mutableStateOf(false) }
-
-                // 2. 页面导航状态管理
-                // 新增 "weather" 状态
+                // 🚀 初始化默认展示首页
                 var currentScreen by remember { mutableStateOf("home") }
 
                 if (!isSplashFinished) {
-                    SplashScreen(
-                        onSplashFinished = { isSplashFinished = true }
-                    )
+                    SplashScreen(onSplashFinished = { isSplashFinished = true })
                 } else {
                     when (currentScreen) {
-                        "home" -> {
-                            HomeScreen(
-                                onPlantClick = { currentScreen = "detail" },
-                                // 🚀 告诉首页：当点击底部天气按钮时，把状态切到天气
-                                onNavigateToWeather = { currentScreen = "weather" }
-                            )
-                        }
-                        "detail" -> {
-                            PlantDetailScreen(
-                                onBack = { currentScreen = "home" }
-                            )
-                        }
-                        "weather" -> {
-                            WeatherScreen(
-                                // 🚀 告诉天气页：当点击底部首页按钮时，把状态切回首页
-                                onNavigateToHome = { currentScreen = "home" }
-                            )
-                        }
+                        "home" -> HomeScreen(
+                            onPlantClick = { currentScreen = "detail" },
+                            onNavigateToWeather = { currentScreen = "weather" },
+                            onNavigateToCalendar = { currentScreen = "calendar" } // 🚀 传给首页
+                        )
+                        "detail" -> PlantDetailScreen(
+                            onBack = { currentScreen = "home" }
+                        )
+                        "weather" -> WeatherScreen(
+                            onNavigateToHome = { currentScreen = "home" },
+                            onNavigateToCalendar = { currentScreen = "calendar" } // 🚀 传给天气页
+                        )
+                        "calendar" -> CalendarScreen(
+                            onNavigateToHome = { currentScreen = "home" },
+                            onNavigateToWeather = { currentScreen = "weather" }   // 🚀 传给日历页
+                        )
                     }
                 }
             }

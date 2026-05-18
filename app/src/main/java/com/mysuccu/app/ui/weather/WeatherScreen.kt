@@ -1,7 +1,7 @@
 package com.mysuccu.app.ui.weather
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -19,6 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -29,24 +30,45 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
-import com.mysuccu.app.ui.components.SuccuPullToRefresh // 🚀 引入自定义下拉刷新组件
+import com.mysuccu.app.ui.components.SuccuPullToRefresh
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch // 🚀 引入协程 launch
+import kotlinx.coroutines.launch
 
-// 🚀 1. 定义数据类，将可见性状态与数据绑定，解决一块删除的问题
+// 🚀 1. 自定义 Modifier：完美还原 HTML 中的 animate-skeleton 呼吸效果
+fun Modifier.shimmerEffect(): Modifier = composed {
+    val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 0.8f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "shimmer_alpha"
+    )
+    this.background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+}
+
 data class WeatherActionItem(
-    val iconRes: Int,
-    val titleRes: Int,
-    val descRes: Int,
-    val isVisible: MutableState<Boolean> = mutableStateOf(true)
+    val iconRes: Int, val titleRes: Int, val descRes: Int, val isVisible: MutableState<Boolean> = mutableStateOf(true)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherScreen(onNavigateToHome: () -> Unit) {
-    // 🚀 声明刷新状态和协程作用域
+fun WeatherScreen(
+    onNavigateToHome: () -> Unit,
+    onNavigateToCalendar: () -> Unit
+) {
+    // 🚀 2. 页面加载与刷新状态控制
+    var isLoading by remember { mutableStateOf(true) }
     var isRefreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    // 🚀 3. 模拟初次进入页面的网络加载 (1.5秒后切到真实数据)
+    LaunchedEffect(Unit) {
+        delay(1500)
+        isLoading = false
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -54,99 +76,134 @@ fun WeatherScreen(onNavigateToHome: () -> Unit) {
             TopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(32.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primaryContainer)
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = stringResource(id = R.string.weather_title),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        Box(modifier = Modifier.size(32.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer))
+                        Spacer(Modifier.width(12.dp))
+                        Text(stringResource(R.string.weather_title), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                     }
                 },
-                actions = {
-                    IconButton(onClick = { /* TODO: 打开搜索 */ }) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Search",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-                )
+                actions = { IconButton(onClick = { }) { Icon(Icons.Default.Search, null, tint = MaterialTheme.colorScheme.primary) } },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
             )
         },
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            ) {
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onNavigateToHome,
-                    icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_home)) }
-                )
-                NavigationBarItem(
-                    selected = true,
-                    onClick = { },
-                    icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_weather)) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { },
-                    icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_calendar)) }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { },
-                    icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_profile)) }
-                )
+            NavigationBar(containerColor = MaterialTheme.colorScheme.surface, modifier = Modifier.shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))) {
+                NavigationBarItem(selected = false, onClick = onNavigateToHome, icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_home)) })
+                NavigationBarItem(selected = true, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_weather)) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary, indicatorColor = MaterialTheme.colorScheme.primaryContainer))
+                NavigationBarItem(selected = false, onClick = onNavigateToCalendar, icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_calendar)) })
+                NavigationBarItem(selected = false, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_profile)) })
             }
         }
     ) { innerPadding ->
-        // 🚀 使用自定义下拉刷新包裹内容
         SuccuPullToRefresh(
             isRefreshing = isRefreshing,
             onRefresh = {
                 isRefreshing = true
                 scope.launch {
-                    delay(1200) // 模拟网络加载数据
+                    // 下拉刷新时也展示骨架屏
+                    isLoading = true
+                    delay(1200)
+                    isLoading = false
                     isRefreshing = false
                 }
             },
             modifier = Modifier.padding(innerPadding)
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                 contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                item { HeroWeatherSection() }
-                item { HourlyForecastSection() }
-                item { AiInsightCard() }
-                item { ActionChecklistSection() }
-                item { ForecastSection() }
+                // 🚀 4. 条件渲染：加载中显示骨架屏，否则显示真实 UI
+                if (isLoading) {
+                    item { WeatherSkeletonSection() }
+                } else {
+                    item { HeroWeatherSection() }
+                    item { HourlyForecastSection() }
+                    item { AiInsightCard() }
+                    item { ActionChecklistSection() }
+                    item { ForecastSection() }
+                }
             }
         }
     }
 }
+
+// ==========================================
+// 🚀 骨架屏组件 (Skeleton Screen)
+// ==========================================
+@Composable
+fun WeatherSkeletonSection() {
+    Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+
+        // 1. 顶部天气卡片 & 环境卡片 骨架
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 2.dp) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Top) {
+                        Column {
+                            Box(modifier = Modifier.width(100.dp).height(16.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Box(modifier = Modifier.width(80.dp).height(40.dp).clip(RoundedCornerShape(8.dp)).shimmerEffect())
+                        }
+                        Box(modifier = Modifier.size(56.dp).clip(CircleShape).shimmerEffect())
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+                        Box(modifier = Modifier.width(60.dp).height(32.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                        Box(modifier = Modifier.width(60.dp).height(32.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                        Box(modifier = Modifier.width(60.dp).height(32.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                    }
+                }
+            }
+
+            Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 2.dp) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Box(modifier = Modifier.width(120.dp).height(20.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                        Box(modifier = Modifier.width(40.dp).height(16.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box(modifier = Modifier.width(200.dp).height(24.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(modifier = Modifier.width(160.dp).height(16.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                }
+            }
+        }
+
+        // 2. AI 建议卡片 骨架
+        Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 2.dp) {
+            Row(modifier = Modifier.padding(24.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Box(modifier = Modifier.size(48.dp).clip(CircleShape).shimmerEffect())
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Box(modifier = Modifier.width(150.dp).height(20.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                    Box(modifier = Modifier.fillMaxWidth().height(16.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                    Box(modifier = Modifier.fillMaxWidth(0.8f).height(16.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                }
+            }
+        }
+
+        // 3. 待办事项列表 骨架
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(modifier = Modifier.width(150.dp).height(24.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect().padding(bottom = 8.dp))
+            repeat(2) {
+                Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 1.dp) {
+                    Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Box(modifier = Modifier.size(24.dp).clip(CircleShape).shimmerEffect())
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Box(modifier = Modifier.width(120.dp).height(20.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                            Box(modifier = Modifier.width(200.dp).height(16.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect())
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ==========================================
+// 🚀 以下为真实的 UI 组件
+// ==========================================
 
 @Composable
 fun HeroWeatherSection() {
