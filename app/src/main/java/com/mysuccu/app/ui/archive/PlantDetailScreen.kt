@@ -1,4 +1,4 @@
-package com.mysuccu.app.ui.screens
+package com.mysuccu.app.ui.archive
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -34,14 +35,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
 import kotlinx.coroutines.launch
 
 fun Modifier.dashedBorder(color: Color, cornerRadius: Dp) = this.drawBehind {
     drawRoundRect(
         color = color,
-        cornerRadius = androidx.compose.ui.geometry.CornerRadius(cornerRadius.toPx()),
+        cornerRadius = CornerRadius(cornerRadius.toPx()),
         style = Stroke(
             width = 1.dp.toPx(),
             pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)

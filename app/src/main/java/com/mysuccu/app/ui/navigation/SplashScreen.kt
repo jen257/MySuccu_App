@@ -1,4 +1,4 @@
-package com.mysuccu.app.ui.screens
+package com.mysuccu.app.ui.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 fun SplashScreen(onSplashFinished: () -> Unit) {
     // 核心逻辑：页面加载后，开始 3 秒倒计时
     LaunchedEffect(key1 = true) {
-        delay(3000L)
+        delay(800L)
         onSplashFinished()
     }
 

@@ -1,4 +1,4 @@
-package com.mysuccu.app.ui.screens
+package com.mysuccu.app.ui.weather
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -29,7 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
+import com.mysuccu.app.ui.components.SuccuPullToRefresh // 🚀 引入自定义下拉刷新组件
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch // 🚀 引入协程 launch
 
 // 🚀 1. 定义数据类，将可见性状态与数据绑定，解决一块删除的问题
 data class WeatherActionItem(
@@ -42,6 +44,10 @@ data class WeatherActionItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(onNavigateToHome: () -> Unit) {
+    // 🚀 声明刷新状态和协程作用域
+    var isRefreshing by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -113,19 +119,31 @@ fun WeatherScreen(onNavigateToHome: () -> Unit) {
             }
         }
     ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+        // 🚀 使用自定义下拉刷新包裹内容
+        SuccuPullToRefresh(
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                isRefreshing = true
+                scope.launch {
+                    delay(1200) // 模拟网络加载数据
+                    isRefreshing = false
+                }
+            },
+            modifier = Modifier.padding(innerPadding)
         ) {
-            item { HeroWeatherSection() }
-            item { HourlyForecastSection() }
-            item { AiInsightCard() }
-            item { ActionChecklistSection() }
-            item { ForecastSection() }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                item { HeroWeatherSection() }
+                item { HourlyForecastSection() }
+                item { AiInsightCard() }
+                item { ActionChecklistSection() }
+                item { ForecastSection() }
+            }
         }
     }
 }
@@ -367,7 +385,6 @@ fun AiInsightCard() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActionChecklistSection() {
-    // 🚀 使用包装对象列表，确保状态隔离
     val actions = remember {
         mutableStateListOf(
             WeatherActionItem(R.drawable.sun_cloudy_line, R.string.action_shade_needed, R.string.action_shade_desc),
@@ -395,7 +412,6 @@ fun ActionChecklistSection() {
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             actions.forEach { action ->
-                // 🚀 核心 1：通过 key 锁定 ID，解决一块删除的问题
                 key(action.titleRes) {
                     AnimatedVisibility(
                         visible = action.isVisible.value,
@@ -436,7 +452,6 @@ fun ActionChecklistSection() {
                         }
                     }
 
-                    // 🚀 核心 2：延迟清理数据，解决卡顿
                     LaunchedEffect(action.isVisible.value) {
                         if (!action.isVisible.value) {
                             delay(350) // 等待动画播完
@@ -503,7 +518,7 @@ fun ActionCard(
     iconPainter: Painter,
     title: String,
     desc: String,
-    borderColor: androidx.compose.ui.graphics.Color,
+    borderColor: Color,
     onLongClick: () -> Unit
 ) {
     Surface(

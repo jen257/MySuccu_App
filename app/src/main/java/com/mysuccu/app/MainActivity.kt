@@ -9,9 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.mysuccu.app.ui.home.HomeScreen
-import com.mysuccu.app.ui.screens.PlantDetailScreen
-import com.mysuccu.app.ui.screens.SplashScreen
-import com.mysuccu.app.ui.screens.WeatherScreen // 🚀 别忘了导入天气页面
+import com.mysuccu.app.ui.archive.PlantDetailScreen
+import com.mysuccu.app.ui.navigation.SplashScreen
+import com.mysuccu.app.ui.weather.WeatherScreen // 🚀 别忘了导入天气页面
 import com.mysuccu.app.ui.theme.MySuccuAppTheme
 
 class MainActivity : ComponentActivity() {

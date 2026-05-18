@@ -5,7 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items // 🚀 引入 items 循环方法
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,22 +24,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mysuccu.app.R
+import com.mysuccu.app.ui.components.SuccuPullToRefresh
 import com.mysuccu.app.ui.home.components.AddPlantCard
 import com.mysuccu.app.ui.home.components.PlantCard
 import com.mysuccu.app.ui.home.components.shimmerEffect
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+// 🚀 临时定义一个假数据类，方便我们循环生成 10 个不同的植物
+private data class MockPlant(
+    val name: String,
+    val statusRes: Int,
+    val days: Int,
+    val type: Int // 0: 健康, 1: 警告, 2: 危险
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-// 🚀 注意看这里：新增了 onNavigateToWeather 参数
 fun HomeScreen(onPlantClick: () -> Unit, onNavigateToWeather: () -> Unit) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     var isLoading by remember { mutableStateOf(true) }
+    var isRefreshing by remember { mutableStateOf(false) }
 
     val currentFolderPath = remember { mutableStateListOf(R.string.filter_all.toString(), "番杏科", "肉锥属", "安珍") }
+
+    // 🚀 这里是我们生成的 10 个不同的多肉测试数据
+    val mockPlants = remember {
+        listOf(
+            MockPlant("灯泡 Burgeri", R.string.status_healthy, 120, 0),
+            MockPlant("露娜莲 Lola", R.string.status_warning, 340, 1),
+            MockPlant("红大内 Optica", R.string.status_danger, 8, 2),
+            MockPlant("生石花 Lithops", R.string.status_healthy, 45, 0),
+            MockPlant("冰灯玉露 Haworthia", R.string.status_healthy, 210, 0),
+            MockPlant("桃蛋 Momotaro", R.string.status_warning, 15, 1),
+            MockPlant("熊童子 Bear's Paw", R.string.status_healthy, 600, 0),
+            MockPlant("黑乌木 Ebony", R.string.status_danger, 2, 2),
+            MockPlant("白牡丹 White Peony", R.string.status_healthy, 88, 0),
+            MockPlant("乙女心 Jelly Bean", R.string.status_warning, 55, 1)
+        )
+    }
 
     LaunchedEffect(Unit) {
         delay(300)
@@ -68,30 +95,14 @@ fun HomeScreen(onPlantClick: () -> Unit, onNavigateToWeather: () -> Unit) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        scope.launch { snackbarHostState.showSnackbar("打开高级筛选: 天数、价格等") }
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_filter_custom),
-                            contentDescription = "Filter by price or days",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
-                        )
+                    IconButton(onClick = { scope.launch { snackbarHostState.showSnackbar("打开高级筛选: 天数、价格等") } }) {
+                        Icon(painter = painterResource(id = R.drawable.ic_filter_custom), contentDescription = "Filter by price or days", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                     }
-                    IconButton(onClick = {
-                        scope.launch { snackbarHostState.showSnackbar("打开搜索栏: 搜索肉肉名字或标签") }
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_search_custom),
-                            contentDescription = "Search by name or tag",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(24.dp)
-                        )
+                    IconButton(onClick = { scope.launch { snackbarHostState.showSnackbar("打开搜索栏: 搜索肉肉名字或标签") } }) {
+                        Icon(painter = painterResource(id = R.drawable.ic_search_custom), contentDescription = "Search by name or tag", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-                )
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
             )
         },
         bottomBar = {
@@ -99,118 +110,83 @@ fun HomeScreen(onPlantClick: () -> Unit, onNavigateToWeather: () -> Unit) {
                 containerColor = MaterialTheme.colorScheme.surface,
                 modifier = Modifier.shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
             ) {
-                NavigationBarItem(
-                    selected = true,
-                    onClick = { },
-                    icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_home)) },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primary,
-                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
-                    )
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onNavigateToWeather, // 🚀 绑定了跳转天气的点击事件
-                    icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_weather)) }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { },
-                    icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_calendar)) }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = { },
-                    icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) },
-                    label = { Text(stringResource(id = R.string.nav_profile)) }
-                )
+                NavigationBarItem(selected = true, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_home)) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary, indicatorColor = MaterialTheme.colorScheme.primaryContainer))
+                NavigationBarItem(selected = false, onClick = onNavigateToWeather, icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_weather)) })
+                NavigationBarItem(selected = false, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_calendar)) })
+                NavigationBarItem(selected = false, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_profile)) })
             }
         },
         floatingActionButton = {
             if (!isLoading) {
-                FloatingActionButton(
-                    onClick = { /* TODO: 导航到添加页面 */ },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                    shape = CircleShape
-                ) { Icon(Icons.Default.Add, null) }
+                FloatingActionButton(onClick = { /* TODO: 导航到添加页面 */ }, containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary, shape = CircleShape) { Icon(Icons.Default.Add, null) }
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 16.dp)) {
-            if (isLoading) {
-                Box(Modifier.padding(vertical = 12.dp).height(32.dp).width(120.dp).clip(RoundedCornerShape(50)).shimmerEffect())
-            } else {
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    itemsIndexed(currentFolderPath) { index, folderName ->
-                        val isLastItem = index == currentFolderPath.lastIndex
-
-                        SuggestionChip(
-                            onClick = {
-                                scope.launch { snackbarHostState.showSnackbar("返回到层级: $folderName") }
-                            },
-                            label = { Text(folderName) },
-                            colors = SuggestionChipDefaults.suggestionChipColors(
-                                containerColor = if (isLastItem) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-                                labelColor = if (isLastItem) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
-                            ),
-                            border = if (isLastItem) null else SuggestionChipDefaults.suggestionChipBorder(enabled = true)
-                        )
-
-                        if (!isLastItem) {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowRight,
-                                contentDescription = "Next Level",
-                                modifier = Modifier.padding(horizontal = 4.dp).size(16.dp),
-                                tint = MaterialTheme.colorScheme.outline
-                            )
-                        }
-                    }
+        SuccuPullToRefresh(
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                isRefreshing = true
+                scope.launch {
+                    delay(1200)
+                    isRefreshing = false
                 }
-            }
-
+            },
+            modifier = Modifier.padding(innerPadding)
+        ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
+                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(bottom = 100.dp)
             ) {
+
+                // 🚀 分类面包屑（独占一行）
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    if (isLoading) {
+                        Box(Modifier.padding(vertical = 12.dp).height(32.dp).width(120.dp).clip(RoundedCornerShape(50)).shimmerEffect())
+                    } else {
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            itemsIndexed(currentFolderPath) { index, folderName ->
+                                val isLastItem = index == currentFolderPath.lastIndex
+
+                                SuggestionChip(
+                                    onClick = { scope.launch { snackbarHostState.showSnackbar("返回到层级: $folderName") } },
+                                    label = { Text(folderName) },
+                                    colors = SuggestionChipDefaults.suggestionChipColors(
+                                        containerColor = if (isLastItem) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+                                        labelColor = if (isLastItem) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                                    ),
+                                    border = if (isLastItem) null else SuggestionChipDefaults.suggestionChipBorder(enabled = true)
+                                )
+
+                                if (!isLastItem) {
+                                    Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "Next Level", modifier = Modifier.padding(horizontal = 4.dp).size(16.dp), tint = MaterialTheme.colorScheme.outline)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 🚀 循环渲染 10 个测试卡片
                 if (isLoading) {
-                    items(9) { PlantCard(isLoading = true) }
+                    items(12) { PlantCard(isLoading = true) } // 骨架屏多加载几个
                 } else {
-                    item {
+                    // 使用 items 遍历数据列表
+                    items(mockPlants) { plant ->
                         PlantCard(
-                            plantName = "Burgeri 1",
-                            statusText = stringResource(id = R.string.status_healthy),
-                            days = 120,
-                            statusType = 0,
+                            plantName = plant.name,
+                            statusText = stringResource(id = plant.statusRes),
+                            days = plant.days,
+                            statusType = plant.type,
                             modifier = Modifier.clickable { onPlantClick() }
                         )
                     }
-                    item {
-                        PlantCard(
-                            plantName = "Lola",
-                            statusText = stringResource(id = R.string.status_warning),
-                            days = 340,
-                            statusType = 1,
-                            modifier = Modifier.clickable { onPlantClick() }
-                        )
-                    }
-                    item {
-                        PlantCard(
-                            plantName = "Optica",
-                            statusText = stringResource(id = R.string.status_danger),
-                            days = 8,
-                            statusType = 2,
-                            modifier = Modifier.clickable { onPlantClick() }
-                        )
-                    }
+
+                    // 最后拼上“添加”按钮
                     item { AddPlantCard() }
                 }
             }
