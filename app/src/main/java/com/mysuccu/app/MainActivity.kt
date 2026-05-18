@@ -12,7 +12,8 @@ import com.mysuccu.app.ui.home.HomeScreen
 import com.mysuccu.app.ui.archive.PlantDetailScreen
 import com.mysuccu.app.ui.navigation.SplashScreen
 import com.mysuccu.app.ui.weather.WeatherScreen
-import com.mysuccu.app.ui.calendar.CalendarScreen // 🚀 确保导包正确
+import com.mysuccu.app.ui.calendar.CalendarScreen
+import com.mysuccu.app.ui.settings.SettingsScreen
 import com.mysuccu.app.ui.theme.MySuccuAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MySuccuAppTheme {
                 var isSplashFinished by remember { mutableStateOf(false) }
-                // 🚀 初始化默认展示首页
                 var currentScreen by remember { mutableStateOf("home") }
 
                 if (!isSplashFinished) {
@@ -32,18 +32,28 @@ class MainActivity : ComponentActivity() {
                         "home" -> HomeScreen(
                             onPlantClick = { currentScreen = "detail" },
                             onNavigateToWeather = { currentScreen = "weather" },
-                            onNavigateToCalendar = { currentScreen = "calendar" } // 🚀 传给首页
+                            onNavigateToCalendar = { currentScreen = "calendar" },
+                            onNavigateToProfile = { currentScreen = "profile" }
                         )
                         "detail" -> PlantDetailScreen(
                             onBack = { currentScreen = "home" }
                         )
                         "weather" -> WeatherScreen(
                             onNavigateToHome = { currentScreen = "home" },
-                            onNavigateToCalendar = { currentScreen = "calendar" } // 🚀 传给天气页
+                            onNavigateToCalendar = { currentScreen = "calendar" },
+                            onNavigateToProfile = { currentScreen = "profile" }
                         )
                         "calendar" -> CalendarScreen(
                             onNavigateToHome = { currentScreen = "home" },
-                            onNavigateToWeather = { currentScreen = "weather" }   // 🚀 传给日历页
+                            onNavigateToWeather = { currentScreen = "weather" },
+                            onNavigateToProfile = { currentScreen = "profile" }
+                        )
+                        "profile" -> SettingsScreen(
+                            onNavigateToHome = { currentScreen = "home" },
+                            onNavigateToWeather = { currentScreen = "weather" },
+                            onNavigateToCalendar = { currentScreen = "calendar" },
+                            onNavigateToPremium = { }, // 留空未来对接内测买断页
+                            onNavigateToTheme = { }    // 留空未来对接色卡选择页
                         )
                     }
                 }

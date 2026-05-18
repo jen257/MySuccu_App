@@ -86,6 +86,16 @@
     <string name="settings_about">关于与反馈</string>
     <string name="settings_logout">退出登录</string>
 
+    <string name="default_username">多肉主理人</string>
+    <string name="user_free_tier">免费版</string>
+    <string name="user_pro_tier">Pro 终身会员</string>
+    <string name="settings_garden_capacity">花园坑位容量</string>
+    <string name="garden_capacity_format">%1$d / %2$d</string>
+    <string name="settings_finance_overview">财务核算</string>
+    <string name="settings_finance_desc">资产与花费占比</string>
+    <string name="settings_group_data">数据同步与导出</string>
+    <string name="settings_group_about">关于与账号</string>
+
     <string name="login_wechat">微信快捷登录</string>
     <string name="login_phone">手机验证码</string>
     <string name="login_email">邮箱密码</string>

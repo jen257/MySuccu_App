@@ -86,6 +86,16 @@
     <string name="settings_about">About &amp; Feedback</string>
     <string name="settings_logout">Log Out</string>
 
+    <string name="default_username">Succu Owner</string>
+    <string name="user_free_tier">Free Tier</string>
+    <string name="user_pro_tier">Pro Tier</string>
+    <string name="settings_garden_capacity">Garden Storage</string>
+    <string name="garden_capacity_format">%1$d / %2$d</string>
+    <string name="settings_finance_overview">Financial Overview</string>
+    <string name="settings_finance_desc">Asset &amp; Cost Breakdown</string>
+    <string name="settings_group_data">Data &amp; Sync</string>
+    <string name="settings_group_about">About &amp; Account</string>
+
     <string name="login_wechat">WeChat Login</string>
     <string name="login_phone">Phone Login</string>
     <string name="login_email">Email &amp; Password</string>

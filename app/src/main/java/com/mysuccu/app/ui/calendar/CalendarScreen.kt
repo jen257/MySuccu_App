@@ -36,9 +36,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
-// ==========================================
-// 🚀 1. 自定义 Shimmer 扩展，对齐天气页呼吸效果
-// ==========================================
+// 🚀 自定义 Shimmer 扩展
 fun Modifier.shimmerEffect(): Modifier = composed {
     val infiniteTransition = rememberInfiniteTransition(label = "calendar_shimmer")
     val alpha by infiniteTransition.animateFloat(
@@ -53,9 +51,6 @@ fun Modifier.shimmerEffect(): Modifier = composed {
     this.background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
 }
 
-// ==========================================
-// Data Structures
-// ==========================================
 data class DayData(val date: String, val dots: List<Color> = emptyList())
 
 data class CareLog(
@@ -69,18 +64,16 @@ data class CareLog(
 @Composable
 fun CalendarScreen(
     onNavigateToHome: () -> Unit,
-    onNavigateToWeather: () -> Unit
+    onNavigateToWeather: () -> Unit,
+    onNavigateToProfile: () -> Unit // 🚀 补齐底栏跳转接口
 ) {
-    // 🚀 控制加载状态，默认首次进场显示
     var isLoading by remember { mutableStateOf(true) }
     var isRefreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    // 记录选中的具体日期
     val calendarInstance = remember { Calendar.getInstance() }
     var selectedDate by remember { mutableStateOf(calendarInstance.time) }
 
-    // 🚀 首次加载持续 1.5 秒
     LaunchedEffect(Unit) {
         delay(1500)
         isLoading = false
@@ -123,7 +116,7 @@ fun CalendarScreen(
                 NavigationBarItem(selected = false, onClick = onNavigateToHome, icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_home)) })
                 NavigationBarItem(selected = false, onClick = onNavigateToWeather, icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_weather)) })
                 NavigationBarItem(selected = true, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_calendar)) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary, indicatorColor = MaterialTheme.colorScheme.primaryContainer))
-                NavigationBarItem(selected = false, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_profile)) })
+                NavigationBarItem(selected = false, onClick = onNavigateToProfile, icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_profile)) })
             }
         }
     ) { innerPadding ->
@@ -132,7 +125,7 @@ fun CalendarScreen(
             onRefresh = {
                 isRefreshing = true
                 scope.launch {
-                    isLoading = true // 🚀 下拉刷新同样触发骨架屏加载
+                    isLoading = true
                     delay(1200)
                     isLoading = false
                     isRefreshing = false
@@ -147,7 +140,6 @@ fun CalendarScreen(
                 contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                // 🚀 2. 状态分流拦截器
                 if (isLoading) {
                     item { CalendarSkeletonSection() }
                 } else {
@@ -169,13 +161,9 @@ fun CalendarScreen(
     }
 }
 
-// ==========================================
-// 🚀 3. 日历专属完整骨架屏组件
-// ==========================================
 @Composable
 fun CalendarSkeletonSection() {
     Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
-        // 数据总览等高卡片骨架
         Row(
             modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -193,7 +181,6 @@ fun CalendarSkeletonSection() {
             }
         }
 
-        // 日历主体盒骨架
         Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 1.dp) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -214,7 +201,6 @@ fun CalendarSkeletonSection() {
             }
         }
 
-        // 底部日志区域骨架
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Box(modifier = Modifier.width(140.dp).height(20.dp).clip(RoundedCornerShape(4.dp)).shimmerEffect().padding(bottom = 4.dp))
             Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 1.dp) {
@@ -233,9 +219,6 @@ fun CalendarSkeletonSection() {
     }
 }
 
-// ==========================================
-// 🚀 4. 真实渲染 UI 组件区域
-// ==========================================
 @Composable
 fun StatisticsSection() {
     Row(
