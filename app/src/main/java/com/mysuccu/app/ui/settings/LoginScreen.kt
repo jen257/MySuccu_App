@@ -1,5 +1,6 @@
 package com.mysuccu.app.ui.settings
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,8 +28,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
+import com.mysuccu.app.data.remote.SupabaseModule
 import com.mysuccu.app.ui.components.SuccuPullToRefresh
+// 🚀 核心修复：引入最新版强类型的 Auth 提供者和 OTP 结构
+import io.github.jan.supabase.gotrue.auth
+import io.github.jan.supabase.gotrue.OtpType
+import io.github.jan.supabase.gotrue.providers.builtin.Email
+import io.github.jan.supabase.gotrue.providers.builtin.OTP // 👈 必须是大写的 OTP
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -47,6 +56,7 @@ fun LoginScreen(
 
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -55,7 +65,7 @@ fun LoginScreen(
                 title = { },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.primary)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -204,6 +214,17 @@ fun LoginScreen(
                                     if (countdown == 0 && account.isNotBlank()) {
                                         countdown = 60
                                         scope.launch {
+                                            try {
+                                                // 🚀 核心修复 1：发送短信使用 signInWith(OTP) 并配以大括号传入参数
+                                                SupabaseModule.client.auth.signInWith(OTP) {
+                                                    phone = account.trim()
+                                                }
+                                                Toast.makeText(context, "Code Sent!", Toast.LENGTH_SHORT).show()
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                                Toast.makeText(context, "Send Failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                                            }
+
                                             while (countdown > 0) {
                                                 delay(1000)
                                                 countdown--
@@ -239,9 +260,30 @@ fun LoginScreen(
                     onClick = {
                         isLoading = true
                         scope.launch {
-                            delay(1500)
-                            isLoading = false
-                            onLoginSuccess()
+                            try {
+                                if (isEmailLogin) {
+                                    // 🚀 核心修复 2：使用大括号的尾随闭包写法，告别圆括号传参
+                                    SupabaseModule.client.auth.signInWith(Email) {
+                                        email = account.trim()
+                                        password = passwordOrCode.trim()
+                                    }
+                                } else {
+                                    // 🚀 核心修复 3：直接调用新版专门验证手机的方法 `verifyPhoneOtp`
+                                    SupabaseModule.client.auth.verifyPhoneOtp(
+                                        type = OtpType.Phone.SMS,
+                                        phone = account.trim(),
+                                        token = passwordOrCode.trim()
+                                    )
+                                }
+
+                                isLoading = false
+                                onLoginSuccess()
+
+                            } catch (e: Exception) {
+                                isLoading = false
+                                e.printStackTrace()
+                                Toast.makeText(context, "Auth Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                            }
                         }
                     },
                     modifier = Modifier.fillMaxWidth().height(56.dp),
@@ -283,7 +325,7 @@ fun LoginScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp)) // 占位保持底部边距
+                Spacer(modifier = Modifier.height(32.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 32.dp)) {
                     Text(text = stringResource(R.string.login_no_account), color = MaterialTheme.colorScheme.outline, style = MaterialTheme.typography.bodyMedium)

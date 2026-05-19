@@ -65,4 +65,14 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.coil.compose)
     implementation(libs.navigation.compose)
+
+    // Supabase 官方 Kotlin SDK (数据库 + 鉴权 Auth)
+    val supabaseVersion = "2.4.3"
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:$supabaseVersion")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:$supabaseVersion")
+
+    // Ktor 网络引擎 (Supabase 底层通讯所需)
+    val ktorVersion = "2.3.10"
+    implementation("io.ktor:ktor-client-android:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
 }
