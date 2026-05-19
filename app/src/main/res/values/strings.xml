@@ -102,6 +102,42 @@
     <string name="limit_free_reached">Garden Full: Free tier limit is 20 succulents.</string>
     <string name="limit_photo_reached">Album Full: Free tier limit is 20 photos per plant.</string>
 
+    <string name="premium_title">MySuccu Pro</string>
+    <string name="premium_subtitle">Unlock the ultimate garden experience</string>
+    <string name="premium_feature_1">Unlimited Storage (Add infinite plants &amp; photos)</string>
+    <string name="premium_feature_2">Cloud Sync (Never lose your data)</string>
+    <string name="premium_feature_3">9 Premium Theme Palettes</string>
+    <string name="premium_feature_4">Exclusive Pro Badge</string>
+    <string name="premium_upgrade_button">Upgrade to Pro Lifetime · $9.99</string>
+    <string name="premium_monthly_title">Monthly Plan</string>
+    <string name="premium_monthly_price">$3.99 / mo</string>
+    <string name="premium_lifetime_title">Lifetime Access</string>
+    <string name="premium_lifetime_price">$9.99 / forever</string>
+    <string name="premium_contact_title">Contact Dev to Complete Upgrade</string>
+    <string name="premium_restore">Restore Purchases</string>
+
+    <string name="premium_wechat">WeChat: jenniec257 (Tap to Copy)</string>
+    <string name="premium_whatsapp">WhatsApp (Show QR)</string>
+    <string name="premium_copied">WeChat ID copied! Paste it in WeChat.</string>
+    <string name="premium_disclaimer_title">Indie Developer Promise &amp; Privacy</string>
+    <string name="premium_disclaimer_desc">This app is proudly developed by an indie creator out of love for succulents. We strictly respect your privacy. All your plant data and photos are securely stored and will never be made public, abused, or sold to third parties.\n\nYour upgrade is considered a sponsorship that supports ongoing independent development. Thank you for helping MySuccu grow!</string>
+    <string name="premium_whatsapp_qr_title">Scan to Add on WhatsApp</string>
+    <string name="premium_whatsapp_qr_hint">Long press to save and scan this code using the WhatsApp camera to get my number</string>
+    <string name="premium_qr_saved_toast">QR code saved to your gallery successfully!</string>
+    <string name="close">Close</string>
+
+    <string name="theme_select_title">Theme Palettes</string>
+    <string name="theme_1">Deep Forest</string>
+    <string name="theme_2">Morandi Mint</string>
+    <string name="theme_3">Warm Cream</string>
+    <string name="theme_4">Icy Jade</string>
+    <string name="theme_5">Sweet Bubblegum</string>
+    <string name="theme_6">Sunset Rouge</string>
+    <string name="theme_7">Retro Terracotta</string>
+    <string name="theme_8">Official Standard</string>
+    <string name="theme_9">Geek Deep Sea</string>
+    <string name="theme_applied">Theme Applied!</string>
+
     <string name="permission_camera_title">Camera Access Required</string>
     <string name="permission_camera_desc">Allow camera access to take beautiful photos for your plant‘s profile</string>
     <string name="permission_location_title">Location Access Required</string>

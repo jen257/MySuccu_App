@@ -41,7 +41,8 @@ fun HomeScreen(
     onPlantClick: () -> Unit,
     onNavigateToWeather: () -> Unit,
     onNavigateToCalendar: () -> Unit,
-    onNavigateToProfile: () -> Unit
+    onNavigateToProfile: () -> Unit,
+    onNavigateToAddPlant: () -> Unit // 🚀 1. 新增：跳转到添加多肉页面的接口
 ) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -93,7 +94,15 @@ fun HomeScreen(
             }
         },
         floatingActionButton = {
-            if (!isLoading) FloatingActionButton(onClick = { }, containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary, shape = CircleShape) { Icon(Icons.Default.Add, null) }
+            // 🚀 2. 绑定点击事件：点击悬浮的 + 号，触发跳转
+            if (!isLoading) FloatingActionButton(
+                onClick = onNavigateToAddPlant,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = CircleShape
+            ) {
+                Icon(Icons.Default.Add, null)
+            }
         }
     ) { innerPadding ->
         SuccuPullToRefresh(
@@ -121,7 +130,13 @@ fun HomeScreen(
                 if (isLoading) items(12) { PlantCard(isLoading = true) }
                 else {
                     items(mockPlants) { plant -> PlantCard(plantName = plant.name, statusText = stringResource(id = plant.statusRes), days = plant.days, statusType = plant.type, modifier = Modifier.clickable { onPlantClick() }) }
-                    item { AddPlantCard() }
+
+                    // 🚀 3. 绑定点击事件：点击列表最后一个白色的 AddPlantCard 也能触发跳转
+                    item {
+                        Box(modifier = Modifier.clickable { onNavigateToAddPlant() }) {
+                            AddPlantCard()
+                        }
+                    }
                 }
             }
         }

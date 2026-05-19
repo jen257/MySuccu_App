@@ -102,6 +102,42 @@
     <string name="limit_free_reached">花园已满：免费额度最多记录 20 盆多肉</string>
     <string name="limit_photo_reached">相册已满：免费额度单盆最多上传 20 张照片</string>
 
+    <string name="premium_title">MySuccu Pro</string>
+    <string name="premium_subtitle">解锁属于你的终极多肉花园</string>
+    <string name="premium_feature_1">无限容量 (无限制添加多肉与定妆照)</string>
+    <string name="premium_feature_2">云端静默同步 (数据永不丢失)</string>
+    <string name="premium_feature_3">解锁 9 组高定神仙色卡主题</string>
+    <string name="premium_feature_4">享有尊贵 Pro 专属标识</string>
+    <string name="premium_upgrade_button">￥49.99 立即升级 Pro 终身会员</string>
+    <string name="premium_monthly_title">按月订阅</string>
+    <string name="premium_monthly_price">￥5.99 / 月</string>
+    <string name="premium_lifetime_title">永久买断</string>
+    <string name="premium_lifetime_price">￥49.99 / 终身</string>
+    <string name="premium_contact_title">请选择升级通道联系客服</string>
+    <string name="premium_restore">恢复购买</string>
+
+    <string name="premium_wechat">微信: jenniec257 (点击复制)</string>
+    <string name="premium_whatsapp">WhatsApp (点击扫码)</string>
+    <string name="premium_copied">微信号 jenniec257 已复制！快去微信添加吧</string>
+    <string name="premium_disclaimer_title">独立开发者承诺 &amp; 免责声明</string>
+    <string name="premium_disclaimer_desc">本软件由个人独立开发，纯粹出于对多肉的热爱。我们极其尊重您的隐私，所有植物数据和照片均安全存储，绝不会被公开分享、滥用或出售给第三方。\n\n您的升级将被视为对独立开发者的赞助与支持，感谢您帮助 MySuccu 走得更远！</string>
+    <string name="premium_whatsapp_qr_title">扫码添加客服 WhatsApp</string>
+    <string name="premium_whatsapp_qr_hint">长按保存二维码，使用 WhatsApp 相机扫描即可添加</string>
+    <string name="premium_qr_saved_toast">二维码图片已保存到系统相册！</string>
+    <string name="close">关闭</string>
+
+    <string name="theme_select_title">外观与色卡</string>
+    <string name="theme_1">深林秘境风</string>
+    <string name="theme_2">莫兰迪薄荷</string>
+    <string name="theme_3">暖阳奶油风</string>
+    <string name="theme_4">冰玉冷淡风</string>
+    <string name="theme_5">甜心泡泡糖</string>
+    <string name="theme_6">晚霞胭脂风</string>
+    <string name="theme_7">复古红陶风</string>
+    <string name="theme_8">官方默认款</string>
+    <string name="theme_9">极客深海风</string>
+    <string name="theme_applied">已应用该色卡！</string>
+
     <string name="permission_camera_title">需要相机权限</string>
     <string name="permission_camera_desc">为了给多肉拍下美美的定妆照，我们需要使用你的相机哦。</string>
     <string name="permission_location_title">需要定位权限</string>
