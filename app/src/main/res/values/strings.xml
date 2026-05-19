@@ -2,45 +2,53 @@
 <resources>
     <string name="app_name">My Succu</string>
     <string name="loading">Loading…</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="remove">Remove</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
+    <string name="confirm">Confirm</string>
+    <string name="close">Close</string>
     <string name="batch_operation">Batch Edit</string>
     <string name="batch_select_all">Select All</string>
+    <string name="days_format">%1$d days</string>
+    <string name="days_ago_format">%1$d days ago</string>
+    <string name="just_now">Just now</string>
+
+    <string name="rmb">Chinese Yuan</string>
+    <string name="usd">US Dollar</string>
+    <string name="eur">Euro</string>
+    <string name="gbp">British Pound</string>
+    <string name="rm_currency">Malaysian Ringgit</string>
+    <string name="hkd_currency">Hong Kong Dollar</string>
 
     <string name="nav_home">Garden</string>
     <string name="nav_calendar">Calendar</string>
     <string name="nav_weather">Weather</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_profile">Profile</string>
-    <string name="onboarding_title">Record how it first came into your life ~ </string>
 
+    <string name="onboarding_title">Record how it first came into your life ~ </string>
     <string name="sort_latest_water">Latest Watered</string>
     <string name="sort_newest_add">Newest Added</string>
     <string name="sort_price_high">Price: High to Low</string>
     <string name="search_hint">Search by name or category…</string>
-    <string name="days_format">%1$d days</string>
-    <string name="days_ago_format">%1$d days ago</string>
-    <string name="just_now">Just now</string>
     <string name="filter_all">All Collections</string>
     <string name="filter_aizoaceae">Aizoaceae</string>
-
+    <string name="filter_conophytum">Conophytum</string>
+    <string name="filter_burgeri">Burgeri</string>
     <string name="empty_plant_title">Your garden is empty</string>
     <string name="empty_plant_desc">Tap the + icon to welcome your first succulent!</string>
 
-    <string name="action_water">Water</string>
-    <string name="action_fertilize">Fertilize</string>
-    <string name="action_repot">Repot</string>
-    <string name="action_trim_roots">Trim</string>
-    <string name="action_medicine">Meds</string>
-    <string name="action_bug">Pest Control</string>
-    <string name="action_prune">Prune</string>
-    <string name="action_photo">Take Photo</string>
-    <string name="action_other">Other</string>
-    <string name="template_water_fertilize">Quick: Water and Fertilize</string>
+    <string name="stat_total_plants">Total Plants</string>
+    <string name="stat_survival_rate">Survival Rate</string>
+    <string name="stat_most_expensive">Most Expensive</string>
+    <string name="stat_oldest">The Elder</string>
+
+    <string name="msg_open_filter">Open advanced filters</string>
+    <string name="msg_open_search">Open search bar</string>
+    <string name="msg_return_level">Return to level: %1$s</string>
+    <string name="msg_add_tag">Add new tag</string>
+    <string name="msg_add_folder">Add new folder</string>
 
     <string name="plant_name_hint">Give it a name ~</string>
     <string name="plant_category">Category/Genus</string>
@@ -55,6 +63,30 @@
     <string name="description">Story</string>
     <string name="record_status">Record a Status</string>
     <string name="record_file">File Folder</string>
+    <string name="edit_price">Edit Price</string>
+    <string name="edit_potting_date">Edit Potting Date</string>
+    <string name="edit_arrival_date">Edit Arrival Date</string>
+    <string name="edit_price_hint">Price edit feature to be implemented</string>
+    <string name="edit_date_hint">Date picker to be implemented</string>
+    <string name="price_updated">Price updated</string>
+    <string name="potting_date_updated">Potting date updated</string>
+    <string name="arrival_date_updated">Arrival date updated</string>
+    <string name="edit_label">Edit tag: %1$s</string>
+    <string name="edit_folder">Open folder editor: %1$s</string>
+
+    <string name="action_water">Water</string>
+    <string name="action_fertilize">Fertilize</string>
+    <string name="action_repot">Repot</string>
+    <string name="action_trim_roots">Trim</string>
+    <string name="action_medicine">Meds</string>
+    <string name="action_bug">Pest Control</string>
+    <string name="action_prune">Prune</string>
+    <string name="action_photo">Take Photo</string>
+    <string name="action_other">Other</string>
+    <string name="action_add_log">ADD LOG</string>
+    <string name="template_water_fertilize">Quick: Water and Fertilize</string>
+    <string name="record_action">Recorded: %1$s</string>
+    <string name="manage_action">Action: %1$s</string>
 
     <string name="status_healthy">Healthy</string>
     <string name="status_warning">Needs Attention</string>
@@ -68,27 +100,78 @@
     <string name="milestone_color">Coloring Up</string>
     <string name="milestone_cluster">Clustering</string>
 
-    <string name="stat_total_plants">Total Plants</string>
-    <string name="stat_survival_rate">Survival Rate</string>
-    <string name="stat_most_expensive">Most Expensive</string>
-    <string name="stat_oldest">The Elder</string>
+    <string name="weather_title">Weather &amp; AI Advice</string>
+    <string name="weather_location_mock">San Francisco, CA</string>
+    <string name="weather_humidity">Humidity</string>
+    <string name="weather_season">Season</string>
+    <string name="weather_uv_index">UV Index</string>
+    <string name="weather_uv_high">High</string>
+    <string name="weather_my_environment">My Environment</string>
+    <string name="env_closed_balcony">Closed Balcony</string>
+    <string name="env_closed_balcony_desc">Glass filters 30% of direct UV. Poor air circulation.</string>
+
+    <string name="weather_insight_title">Smart Care Insight</string>
+    <string name="weather_insight_desc_hot">Today is exceptionally hot at 35°C. Your \"Sedum\" plants should be moved to a shaded area with indirect light to prevent sunburn.</string>
+    <string name="weather_actions_title">Today\'s Actions</string>
+    <string name="action_shade_needed">Shade Needed</string>
+    <string name="action_shade_desc">Move sensitive varieties away from the glass between 12 PM - 4 PM.</string>
+    <string name="action_avoid_water">Avoid Watering</string>
+    <string name="action_avoid_water_desc">High temps risk root rot if watered during the day. Wait for evening.</string>
+    <string name="action_ventilate">Ventilate</string>
+    <string name="action_ventilate_desc">Open a window if possible to improve air circulation.</string>
 
     <string name="alert_high_temp">High Temp Alert: Ensure shading and ventilation.</string>
     <string name="alert_heavy_rain">Heavy Rain Alert: Protect outdoor plants from rain.</string>
     <string name="alert_frost">Frost Alert: Move indoors to keep warm.</string>
+    <string name="warning_take_inside">Move to Indoor</string>
+    <string name="warning_physical_damage">Protect from Damage</string>
+    <string name="warning_frost">Frost Warning</string>
+    <string name="tag_watering_window">Watering Window</string>
+    <string name="tag_optimal">Optimal</string>
+    <string name="tag_high_humidity">High Humidity</string>
+    <string name="tag_monitor_soil">Monitor Soil</string>
 
+    <string name="weather_forecast_title">Succulent Forecast</string>
+    <string name="weather_hourly_forecast">24 Hour Forecast</string>
+    <string name="forecast_now">Now</string>
+    <string name="forecast_tomorrow">Tomorrow</string>
+    <string name="forecast_yesterday">Yesterday</string>
+    <string name="forecast_sun">Sun</string>
+    <string name="forecast_mon">Mon</string>
+    <string name="forecast_tue">Tue</string>
+    <string name="forecast_wed">Wed</string>
+    <string name="forecast_thu">Thu</string>
+    <string name="forecast_fri">Fri</string>
+    <string name="forecast_sat">Sat</string>
+
+    <string name="season_spring">Spring</string>
+    <string name="season_summer">Summer</string>
+    <string name="season_autumn">Autumn</string>
+    <string name="season_winter">Winter</string>
+
+    <string name="calendar_title">Care Calendar</string>
+    <string name="stats_watered">Plants Watered</string>
+    <string name="stats_repotted">Re-potted</string>
+    <string name="legend_watering">Watering</string>
+    <string name="legend_fertilizing">Fertilizing</string>
+    <string name="legend_alert">Alert</string>
+    <string name="logs_for_date">Logs for %1$s</string>
+    <string name="mock_month_year">October 2023</string>
+    <string name="empty_log_title">No care logs for this day</string>
+    <string name="empty_log_desc">Tap the + button to record your first care action or schedule a reminder.</string>
+
+    <string name="user_free_tier">Free Tier</string>
+    <string name="user_pro_tier">Pro Tier</string>
     <string name="settings_account">Account</string>
     <string name="settings_sync">Cloud Sync (Supabase)</string>
     <string name="settings_export">Export Backup (CSV/JSON)</string>
     <string name="settings_theme">Appearance &amp; Themes</string>
     <string name="settings_pro_title">Upgrade to Pro</string>
     <string name="settings_pro_desc">Unlock unlimited capacity and 9 premium color palettes.</string>
-    <string name="settings_about">About &amp; Feedback</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_us">About Us</string>
+    <string name="settings_feedback">Feedback</string>
     <string name="settings_logout">Log Out</string>
-
-    <string name="default_username">Succu Owner</string>
-    <string name="user_free_tier">Free Tier</string>
-    <string name="user_pro_tier">Pro Tier</string>
     <string name="settings_garden_capacity">Garden Storage</string>
     <string name="garden_capacity_format">%1$d / %2$d</string>
     <string name="settings_finance_overview">Financial Overview</string>
@@ -96,12 +179,44 @@
     <string name="settings_group_data">Data &amp; Sync</string>
     <string name="settings_group_about">About &amp; Account</string>
 
+    <string name="login_welcome_title">Welcome to MySuccu</string>
+    <string name="login_welcome_subtitle">Log in to enable cloud sync and protect your garden.</string>
+    <string name="login_tab_email">Email</string>
+    <string name="login_email_hint">Email Address</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_forgot_password">Forgot Password?</string>
+    <string name="login_button">Log In</string>
     <string name="login_wechat">WeChat Login</string>
     <string name="login_phone">Phone Login</string>
-    <string name="login_email">Email &amp; Password</string>
+    <string name="login_code_hint">Code</string>
+    <string name="login_get_code">Get Code</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_register_button">Sign Up</string>
+    <string name="login_or_divider">Or log in with</string>
+
+    <string name="account_title">Account &amp; Security</string>
+    <string name="edit_profile_name">Edit Nickname</string>
+    <string name="name_input_hint">Enter new nickname</string>
+    <string name="default_username">Succulent Explorer</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="account_group_basic">Basic Information</string>
+    <string name="account_email">Email</string>
+    <string name="account_phone">Phone Number</string>
+    <string name="account_password">Password</string>
+    <string name="account_unbound">Not Bound</string>
+    <string name="account_to_bind">Bind Now</string>
+    <string name="account_unset">Not Set</string>
+    <string name="account_group_third_party">Third-Party Logins</string>
+    <string name="account_wechat_login">WeChat Login</string>
+    <string name="account_delete">Delete Account</string>
+    <string name="account_delete_warning">All cloud data will be permanently deleted. Proceed with caution.</string>
+    <string name="account_delete_dialog_title">Confirm Account Deletion?</string>
+    <string name="account_delete_dialog_desc">Once deleted, all your plant profiles, photos, and cloud backups in MySuccu will be permanently removed and cannot be recovered. Continue?</string>
+    <string name="account_delete_confirm">Delete Permanently</string>
+
     <string name="limit_free_reached">Garden Full: Free tier limit is 20 succulents.</string>
     <string name="limit_photo_reached">Album Full: Free tier limit is 20 photos per plant.</string>
-
     <string name="premium_title">MySuccu Pro</string>
     <string name="premium_subtitle">Unlock the ultimate garden experience</string>
     <string name="premium_feature_1">Unlimited Storage (Add infinite plants &amp; photos)</string>
@@ -115,18 +230,24 @@
     <string name="premium_lifetime_price">$9.99 / forever</string>
     <string name="premium_contact_title">Contact Dev to Complete Upgrade</string>
     <string name="premium_restore">Restore Purchases</string>
-
     <string name="premium_wechat">WeChat: jenniec257 (Tap to Copy)</string>
     <string name="premium_whatsapp">WhatsApp (Show QR)</string>
     <string name="premium_copied">WeChat ID copied! Paste it in WeChat.</string>
-    <string name="premium_disclaimer_title">Indie Developer Promise &amp; Privacy</string>
-    <string name="premium_disclaimer_desc">This app is proudly developed by an indie creator out of love for succulents. We strictly respect your privacy. All your plant data and photos are securely stored and will never be made public, abused, or sold to third parties.\n\nYour upgrade is considered a sponsorship that supports ongoing independent development. Thank you for helping MySuccu grow!</string>
     <string name="premium_whatsapp_qr_title">Scan to Add on WhatsApp</string>
     <string name="premium_whatsapp_qr_hint">Long press to save and scan this code using the WhatsApp camera to get my number</string>
     <string name="premium_qr_saved_toast">QR code saved to your gallery successfully!</string>
-    <string name="close">Close</string>
+    <string name="premium_disclaimer_title">Indie Developer Promise &amp; Privacy</string>
+    <string name="premium_disclaimer_desc">This app is proudly developed by an indie creator out of love for succulents. We strictly respect your privacy. All your plant data and photos are securely stored and will never be made public, abused, or sold to third parties.\n\nYour upgrade is considered a sponsorship that supports ongoing independent development. Thank you for helping MySuccu grow!</string>
+
+    <string name="permission_camera_title">Camera Access Required</string>
+    <string name="permission_camera_desc">Allow camera access to take beautiful photos for your plant‘s profile</string>
+    <string name="permission_location_title">Location Access Required</string>
+    <string name="permission_location_desc">To provide accurate weather forecasts and care alerts for your plants, please allow location access.</string>
+    <string name="permission_grant">Grant Access</string>
+    <string name="permission_deny">Not Now</string>
 
     <string name="theme_select_title">Theme Palettes</string>
+    <string name="theme_applied">Theme Applied!</string>
     <string name="theme_1">Deep Forest</string>
     <string name="theme_2">Morandi Mint</string>
     <string name="theme_3">Warm Cream</string>
@@ -136,104 +257,5 @@
     <string name="theme_7">Retro Terracotta</string>
     <string name="theme_8">Official Standard</string>
     <string name="theme_9">Geek Deep Sea</string>
-    <string name="theme_applied">Theme Applied!</string>
 
-    <string name="permission_camera_title">Camera Access Required</string>
-    <string name="permission_camera_desc">Allow camera access to take beautiful photos for your plant‘s profile</string>
-    <string name="permission_location_title">Location Access Required</string>
-    <string name="permission_location_desc">To provide accurate weather forecasts and care alerts for your plants, please allow location access.</string>
-    <string name="permission_grant">Grant Access</string>
-    <string name="permission_deny">Not Now</string>
-
-    <string name="rmb">Chinese Yuan</string>
-    <string name="usd">US Dollar</string>
-    <string name="eur">Euro</string>
-    <string name="gbp">British Pound</string>
-    <string name="rm_currency">Malaysian Ringgit</string>
-    <string name="hkd_currency">Hong Kong Dollar</string>
-
-    <string name="edit_price">Edit Price</string>
-    <string name="edit_potting_date">Edit Potting Date</string>
-    <string name="edit_arrival_date">Edit Arrival Date</string>
-    <string name="edit_price_hint">Price edit feature to be implemented</string>
-    <string name="edit_date_hint">Date picker to be implemented</string>
-    <string name="confirm">Confirm</string>
-    <string name="price_updated">Price updated</string>
-    <string name="potting_date_updated">Potting date updated</string>
-    <string name="arrival_date_updated">Arrival date updated</string>
-    <string name="edit_label">Edit tag: %1$s</string>
-    <string name="edit_folder">Open folder editor: %1$s</string>
-    <string name="record_action">Recorded: %1$s</string>
-    <string name="manage_action">Action: %1$s</string>
-
-    <string name="weather_title">Weather &amp; AI Advice</string>
-    <string name="weather_location_mock">San Francisco, CA</string>
-    <string name="weather_humidity">Humidity</string>
-    <string name="weather_season">Season</string>
-    <string name="weather_uv_index">UV Index</string>
-    <string name="weather_uv_high">High</string>
-
-    <string name="weather_my_environment">My Environment</string>
-    <string name="env_closed_balcony">Closed Balcony</string>
-    <string name="env_closed_balcony_desc">Glass filters 30% of direct UV. Poor air circulation.</string>
-
-    <string name="weather_insight_title">Smart Care Insight</string>
-    <string name="weather_insight_desc_hot">Today is exceptionally hot at 35°C. Your \"Sedum\" plants should be moved to a shaded area with indirect light to prevent sunburn.</string>
-
-    <string name="weather_actions_title">Today\'s Actions</string>
-    <string name="action_shade_needed">Shade Needed</string>
-    <string name="action_shade_desc">Move sensitive varieties away from the glass between 12 PM - 4 PM.</string>
-    <string name="action_avoid_water">Avoid Watering</string>
-    <string name="action_avoid_water_desc">High temps risk root rot if watered during the day. Wait for evening.</string>
-    <string name="action_ventilate">Ventilate</string>
-    <string name="action_ventilate_desc">Open a window if possible to improve air circulation.</string>
-
-    <string name="weather_forecast_title">Succulent Forecast</string>
-    <string name="forecast_tomorrow">Tomorrow</string>
-    <string name="forecast_yesterday">Yesterday</string>
-    <string name="forecast_sun">Sun</string>
-    <string name="forecast_mon">Mon</string>
-    <string name="forecast_tue">Tue</string>
-    <string name="forecast_wed">Wed</string>
-    <string name="forecast_thu">Thu</string>
-    <string name="forecast_fri">Fri</string>
-    <string name="forecast_sat">Sat</string>
-
-    <string name="calendar_title">Care Calendar</string>
-    <string name="stats_watered">Plants Watered</string>
-    <string name="stats_repotted">Re-potted</string>
-    <string name="legend_watering">Watering</string>
-    <string name="legend_fertilizing">Fertilizing</string>
-    <string name="legend_alert">Alert</string>
-    <string name="logs_for_date">Logs for %1$s</string>
-    <string name="mock_month_year">October 2023</string>
-
-    <string name="empty_log_title">No care logs for this day</string>
-    <string name="empty_log_desc">Tap the + button to record your first care action or schedule a reminder.</string>
-    <string name="action_add_log">ADD LOG</string>
-
-    <string name="tag_watering_window">Watering Window</string>
-    <string name="tag_optimal">Optimal</string>
-    <string name="tag_high_humidity">High Humidity</string>
-    <string name="tag_monitor_soil">Monitor Soil</string>
-
-    <string name="weather_hourly_forecast">24 Hour Forecast</string>
-    <string name="forecast_now">Now</string>
-    <string name="season_spring">Spring</string>
-    <string name="season_summer">Summer</string>
-    <string name="season_autumn">Autumn</string>
-    <string name="season_winter">Winter</string>
-
-    <string name="warning_take_inside">Move to Indoor</string>
-    <string name="warning_physical_damage">Protect from Damage</string>
-    <string name="warning_frost">Frost Warning</string>
-
-    <string name="filter_conophytum">Conophytum</string>
-    <string name="filter_burgeri">Burgeri</string>
-
-    <string name="msg_open_filter">Open advanced filters</string>
-    <string name="msg_open_search">Open search bar</string>
-    <string name="msg_return_level">Return to level: %1$s</string>
-    <string name="msg_add_tag">Add new tag</string>
-    <string name="msg_add_folder">Add new folder</string>
 </resources>

@@ -2,45 +2,53 @@
 <resources>
     <string name="app_name">肉崽观察日记</string>
     <string name="loading">加载中…</string>
-    <string name="save">保存</string>
-    <string name="cancel">取消</string>
     <string name="delete">删除</string>
     <string name="remove">移除</string>
     <string name="add">添加</string>
     <string name="edit">编辑</string>
+    <string name="confirm">确定</string>
+    <string name="close">关闭</string>
     <string name="batch_operation">批量操作</string>
     <string name="batch_select_all">全选</string>
+    <string name="days_format">%1$d 天</string>
+    <string name="days_ago_format">%1$d 天前</string>
+    <string name="just_now">刚刚</string>
+
+    <string name="rmb">人民币</string>
+    <string name="usd">美元</string>
+    <string name="eur">欧元</string>
+    <string name="gbp">英镑</string>
+    <string name="rm_currency">马币</string>
+    <string name="hkd_currency">港币</string>
 
     <string name="nav_home">肉崽小窝</string>
     <string name="nav_calendar">日历</string>
     <string name="nav_weather">天气</string>
     <string name="nav_settings">设置</string>
     <string name="nav_profile">我的</string>
-    <string name="onboarding_title">快来给你的肉肉上户口啦 ~ </string>
 
+    <string name="onboarding_title">快来给你的肉肉上户口啦 ~ </string>
     <string name="sort_latest_water">最近浇水</string>
     <string name="sort_newest_add">最新添加</string>
     <string name="sort_price_high">价格高低</string>
     <string name="search_hint">搜索多肉名称或分类…</string>
-    <string name="days_format">%1$d 天</string>
-    <string name="days_ago_format">%1$d 天前</string>
-    <string name="just_now">刚刚</string>
     <string name="filter_all">全部多肉</string>
     <string name="filter_aizoaceae">番杏科</string>
-
+    <string name="filter_conophytum">肉锥属</string>
+    <string name="filter_burgeri">安珍</string>
     <string name="empty_plant_title">这里还没有小生命哦 ~ </string>
     <string name="empty_plant_desc">点击右下角 + 号，迎接你的第一盆多肉吧！</string>
 
-    <string name="action_water">浇水</string>
-    <string name="action_fertilize">施肥</string>
-    <string name="action_repot">换土/换盆</string>
-    <string name="action_trim_roots">修根</string>
-    <string name="action_medicine">用药</string>
-    <string name="action_bug">杀虫</string>
-    <string name="action_prune">扒皮</string>
-    <string name="action_photo">拍照记录</string>
-    <string name="action_other">其他</string>
-    <string name="template_water_fertilize">一键浇水+施肥</string>
+    <string name="stat_total_plants">植物总数</string>
+    <string name="stat_survival_rate">整体存活率</string>
+    <string name="stat_most_expensive">最贵多肉</string>
+    <string name="stat_oldest">开国元老</string>
+
+    <string name="msg_open_filter">打开高级筛选</string>
+    <string name="msg_open_search">打开搜索栏</string>
+    <string name="msg_return_level">返回到层级: %1$s</string>
+    <string name="msg_add_tag">添加新标签</string>
+    <string name="msg_add_folder">新增分类文件夹</string>
 
     <string name="plant_name_hint">起个名字吧~</string>
     <string name="plant_category">科属分类</string>
@@ -55,6 +63,30 @@
     <string name="description">写写它的故事</string>
     <string name="record_status">记录肉肉的状态</string>
     <string name="record_file">归档文件夹</string>
+    <string name="edit_price">编辑价格</string>
+    <string name="edit_potting_date">编辑上盆时间</string>
+    <string name="edit_arrival_date">编辑到家日期</string>
+    <string name="edit_price_hint">价格编辑功能待实现</string>
+    <string name="edit_date_hint">日期选择器待实现</string>
+    <string name="price_updated">价格已更新</string>
+    <string name="potting_date_updated">上盆时间已更新</string>
+    <string name="arrival_date_updated">到家日期已更新</string>
+    <string name="edit_label">编辑标签: %1$s</string>
+    <string name="edit_folder">打开层级编辑器: %1$s</string>
+
+    <string name="action_water">浇水</string>
+    <string name="action_fertilize">施肥</string>
+    <string name="action_repot">换土/换盆</string>
+    <string name="action_trim_roots">修根</string>
+    <string name="action_medicine">用药</string>
+    <string name="action_bug">杀虫</string>
+    <string name="action_prune">扒皮</string>
+    <string name="action_photo">拍照记录</string>
+    <string name="action_other">其他</string>
+    <string name="action_add_log">添加记录</string>
+    <string name="template_water_fertilize">一键浇水+施肥</string>
+    <string name="record_action">已记录: %1$s</string>
+    <string name="manage_action">操作: %1$s</string>
 
     <string name="status_healthy">健康生长</string>
     <string name="status_warning">状态不佳</string>
@@ -68,111 +100,12 @@
     <string name="milestone_color">上色</string>
     <string name="milestone_cluster">群生</string>
 
-    <string name="stat_total_plants">植物总数</string>
-    <string name="stat_survival_rate">整体存活率</string>
-    <string name="stat_most_expensive">最贵多肉</string>
-    <string name="stat_oldest">开国元老</string>
-
-    <string name="alert_high_temp">高温预警：请注意遮阳通风</string>
-    <string name="alert_heavy_rain">暴雨预警：露养多肉请注意避雨</string>
-    <string name="alert_frost">霜冻预警：请移至室内保暖</string>
-
-    <string name="settings_account">账号管理</string>
-    <string name="settings_sync">云端静默同步 (Supabase)</string>
-    <string name="settings_export">导出本地备份 (CSV/JSON)</string>
-    <string name="settings_theme">外观与色卡主题</string>
-    <string name="settings_pro_title">升级 Pro 会员</string>
-    <string name="settings_pro_desc">解锁无限容量与 9 组高定多肉色卡</string>
-    <string name="settings_about">关于与反馈</string>
-    <string name="settings_logout">退出登录</string>
-
-    <string name="default_username">多肉主理人</string>
-    <string name="user_free_tier">免费版</string>
-    <string name="user_pro_tier">Pro 终身会员</string>
-    <string name="settings_garden_capacity">花园坑位容量</string>
-    <string name="garden_capacity_format">%1$d / %2$d</string>
-    <string name="settings_finance_overview">财务核算</string>
-    <string name="settings_finance_desc">资产与花费占比</string>
-    <string name="settings_group_data">数据同步与导出</string>
-    <string name="settings_group_about">关于与账号</string>
-
-    <string name="login_wechat">微信快捷登录</string>
-    <string name="login_phone">手机验证码</string>
-    <string name="login_email">邮箱密码</string>
-    <string name="limit_free_reached">花园已满：免费额度最多记录 20 盆多肉</string>
-    <string name="limit_photo_reached">相册已满：免费额度单盆最多上传 20 张照片</string>
-
-    <string name="premium_title">MySuccu Pro</string>
-    <string name="premium_subtitle">解锁属于你的终极多肉花园</string>
-    <string name="premium_feature_1">无限容量 (无限制添加多肉与定妆照)</string>
-    <string name="premium_feature_2">云端静默同步 (数据永不丢失)</string>
-    <string name="premium_feature_3">解锁 9 组高定神仙色卡主题</string>
-    <string name="premium_feature_4">享有尊贵 Pro 专属标识</string>
-    <string name="premium_upgrade_button">￥49.99 立即升级 Pro 终身会员</string>
-    <string name="premium_monthly_title">按月订阅</string>
-    <string name="premium_monthly_price">￥5.99 / 月</string>
-    <string name="premium_lifetime_title">永久买断</string>
-    <string name="premium_lifetime_price">￥49.99 / 终身</string>
-    <string name="premium_contact_title">请选择升级通道联系客服</string>
-    <string name="premium_restore">恢复购买</string>
-
-    <string name="premium_wechat">微信: jenniec257 (点击复制)</string>
-    <string name="premium_whatsapp">WhatsApp (点击扫码)</string>
-    <string name="premium_copied">微信号 jenniec257 已复制！快去微信添加吧</string>
-    <string name="premium_disclaimer_title">独立开发者承诺 &amp; 免责声明</string>
-    <string name="premium_disclaimer_desc">本软件由个人独立开发，纯粹出于对多肉的热爱。我们极其尊重您的隐私，所有植物数据和照片均安全存储，绝不会被公开分享、滥用或出售给第三方。\n\n您的升级将被视为对独立开发者的赞助与支持，感谢您帮助 MySuccu 走得更远！</string>
-    <string name="premium_whatsapp_qr_title">扫码添加客服 WhatsApp</string>
-    <string name="premium_whatsapp_qr_hint">长按保存二维码，使用 WhatsApp 相机扫描即可添加</string>
-    <string name="premium_qr_saved_toast">二维码图片已保存到系统相册！</string>
-    <string name="close">关闭</string>
-
-    <string name="theme_select_title">外观与色卡</string>
-    <string name="theme_1">深林秘境风</string>
-    <string name="theme_2">莫兰迪薄荷</string>
-    <string name="theme_3">暖阳奶油风</string>
-    <string name="theme_4">冰玉冷淡风</string>
-    <string name="theme_5">甜心泡泡糖</string>
-    <string name="theme_6">晚霞胭脂风</string>
-    <string name="theme_7">复古红陶风</string>
-    <string name="theme_8">官方默认款</string>
-    <string name="theme_9">极客深海风</string>
-    <string name="theme_applied">已应用该色卡！</string>
-
-    <string name="permission_camera_title">需要相机权限</string>
-    <string name="permission_camera_desc">为了给多肉拍下美美的定妆照，我们需要使用你的相机哦。</string>
-    <string name="permission_location_title">需要定位权限</string>
-    <string name="permission_location_desc">为了获取所在地的和风天气预报与微气候预警，请允许获取位置信息。</string>
-    <string name="permission_grant">去授权</string>
-    <string name="permission_deny">暂时不要</string>
-
-    <string name="rmb">人民币</string>
-    <string name="usd">美元</string>
-    <string name="eur">欧元</string>
-    <string name="gbp">英镑</string>
-    <string name="rm_currency">马币</string>
-    <string name="hkd_currency">港币</string>
-
-    <string name="edit_price">编辑价格</string>
-    <string name="edit_potting_date">编辑上盆时间</string>
-    <string name="edit_arrival_date">编辑到家日期</string>
-    <string name="edit_price_hint">价格编辑功能待实现</string>
-    <string name="edit_date_hint">日期选择器待实现</string>
-    <string name="confirm">确定</string>
-    <string name="price_updated">价格已更新</string>
-    <string name="potting_date_updated">上盆时间已更新</string>
-    <string name="arrival_date_updated">到家日期已更新</string>
-    <string name="edit_label">编辑标签: %1$s</string>
-    <string name="edit_folder">打开层级编辑器: %1$s</string>
-    <string name="record_action">已记录: %1$s</string>
-    <string name="manage_action">操作: %1$s</string>
-
     <string name="weather_title">天气与智能建议</string>
     <string name="weather_location_mock">旧金山, CA</string>
     <string name="weather_humidity">湿度</string>
     <string name="weather_season">季节</string>
     <string name="weather_uv_index">紫外线</string>
     <string name="weather_uv_high">高</string>
-
     <string name="weather_my_environment">我的环境</string>
     <string name="env_closed_balcony">封闭阳台</string>
     <string name="env_closed_balcony_desc">玻璃过滤了约30%的直射紫外线。通风较差。</string>
@@ -187,7 +120,20 @@
     <string name="action_ventilate">加强通风</string>
     <string name="action_ventilate_desc">如果可能的话，打开窗户或风扇以改善空气流通。</string>
 
+    <string name="alert_high_temp">高温预警：请注意遮阳通风</string>
+    <string name="alert_heavy_rain">暴雨预警：露养多肉请注意避雨</string>
+    <string name="alert_frost">霜冻预警：请移至室内保暖</string>
+    <string name="warning_take_inside">移至室内</string>
+    <string name="warning_physical_damage">物理防砸</string>
+    <string name="warning_frost">霜冻警告</string>
+    <string name="tag_watering_window">浇水窗口</string>
+    <string name="tag_optimal">状态极佳</string>
+    <string name="tag_high_humidity">高湿预警</string>
+    <string name="tag_monitor_soil">监测土壤</string>
+
     <string name="weather_forecast_title">多肉专属预报</string>
+    <string name="weather_hourly_forecast">24小时预报</string>
+    <string name="forecast_now">现在</string>
     <string name="forecast_tomorrow">明天</string>
     <string name="forecast_yesterday">昨天</string>
     <string name="forecast_sun">周日</string>
@@ -198,6 +144,11 @@
     <string name="forecast_fri">周五</string>
     <string name="forecast_sat">周六</string>
 
+    <string name="season_spring">春季</string>
+    <string name="season_summer">夏季</string>
+    <string name="season_autumn">秋季</string>
+    <string name="season_winter">冬季</string>
+
     <string name="calendar_title">养护日历</string>
     <string name="stats_watered">已浇水</string>
     <string name="stats_repotted">已换盆</string>
@@ -206,33 +157,105 @@
     <string name="legend_alert">异常预警</string>
     <string name="logs_for_date">%1$s 养护日志</string>
     <string name="mock_month_year">2023年 10月</string>
-
     <string name="empty_log_title">今日暂无养护记录</string>
     <string name="empty_log_desc">点击下方按钮记录你的第一次养护，或为肉肉设定一个提醒吧。</string>
-    <string name="action_add_log">添加记录</string>
 
-    <string name="tag_watering_window">浇水窗口</string>
-    <string name="tag_optimal">状态极佳</string>
-    <string name="tag_high_humidity">高湿预警</string>
-    <string name="tag_monitor_soil">监测土壤</string>
+    <string name="default_username">多肉主理人</string>
+    <string name="user_free_tier">免费版</string>
+    <string name="user_pro_tier">Pro 终身会员</string>
+    <string name="settings_account">账号管理</string>
+    <string name="settings_sync">云端静默同步 (Supabase)</string>
+    <string name="settings_export">导出本地备份 (CSV/JSON)</string>
+    <string name="settings_theme">外观与色卡主题</string>
+    <string name="settings_pro_title">升级 Pro 会员</string>
+    <string name="settings_pro_desc">解锁无限容量与 9 组高定多肉色卡</string>
+    <string name="settings_about">关于</string>
+    <string name="settings_about_us">关于我们</string>
+    <string name="settings_feedback">意见反馈</string>
+    <string name="settings_logout">退出登录</string>
+    <string name="settings_garden_capacity">花园坑位容量</string>
+    <string name="garden_capacity_format">%1$d / %2$d</string>
+    <string name="settings_finance_overview">财务核算</string>
+    <string name="settings_finance_desc">资产与花费占比</string>
+    <string name="settings_group_data">数据同步与导出</string>
+    <string name="settings_group_about">关于与账号</string>
 
-    <string name="weather_hourly_forecast">24小时预报</string>
-    <string name="forecast_now">现在</string>
-    <string name="season_spring">春季</string>
-    <string name="season_summer">夏季</string>
-    <string name="season_autumn">秋季</string>
-    <string name="season_winter">冬季</string>
+    <string name="login_welcome_title">欢迎回到 MySuccu</string>
+    <string name="login_welcome_subtitle">登录以开启云端静默同步，守护您的多肉花园</string>
+    <string name="login_tab_email">邮箱密码</string>
+    <string name="login_email_hint">邮箱地址</string>
+    <string name="login_password_hint">密码</string>
+    <string name="login_forgot_password">忘记密码？</string>
+    <string name="login_button">登 录</string>
+    <string name="login_wechat">微信快捷登录</string>
+    <string name="login_phone">手机验证码</string>
+    <string name="login_code_hint">验证码</string>
+    <string name="login_get_code">获取验证码</string>
+    <string name="login_no_account">还没有账号？</string>
+    <string name="login_register_button">立即注册</string>
+    <string name="login_or_divider">或通过以下方式快捷登录</string>
 
-    <string name="warning_take_inside">移至室内</string>
-    <string name="warning_physical_damage">物理防砸</string>
-    <string name="warning_frost">霜冻警告</string>
+    <string name="account_title">账号与安全</string>
+    <string name="edit_profile_name">修改昵称</string>
+    <string name="name_input_hint">请输入新昵称</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="account_group_basic">基础账号信息</string>
+    <string name="account_email">邮箱</string>
+    <string name="account_phone">手机号</string>
+    <string name="account_password">登录密码</string>
+    <string name="account_unbound">未绑定</string>
+    <string name="account_to_bind">去绑定</string>
+    <string name="account_unset">未设置</string>
+    <string name="account_group_third_party">第三方绑定</string>
+    <string name="account_wechat_login">微信快捷登录</string>
+    <string name="account_delete">注销账号</string>
+    <string name="account_delete_warning">注销后所有云端备份数据将被永久删除，请谨慎操作</string>
+    <string name="account_delete_dialog_title">确认注销账号？</string>
+    <string name="account_delete_dialog_desc">注销后，您在 MySuccu 记录的所有植物档案、照片及云端备份将立刻被永久删除，且无法恢复。是否继续？</string>
+    <string name="account_delete_confirm">残忍注销</string>
 
-    <string name="filter_conophytum">肉锥属</string>
-    <string name="filter_burgeri">安珍</string>
+    <string name="limit_free_reached">花园已满：免费额度最多记录 20 盆多肉</string>
+    <string name="limit_photo_reached">相册已满：免费额度单盆最多上传 20 张照片</string>
+    <string name="premium_title">MySuccu Pro</string>
+    <string name="premium_subtitle">解锁属于你的终极多肉花园</string>
+    <string name="premium_feature_1">无限容量 (无限制添加多肉与定妆照)</string>
+    <string name="premium_feature_2">云端静默同步 (数据永不丢失)</string>
+    <string name="premium_feature_3">解锁 9 组高定神仙色卡主题</string>
+    <string name="premium_feature_4">享有尊贵 Pro 专属标识</string>
+    <string name="premium_upgrade_button">￥49.99 立即升级 Pro 终身会员</string>
+    <string name="premium_monthly_title">按月订阅</string>
+    <string name="premium_monthly_price">￥5.99 / 月</string>
+    <string name="premium_lifetime_title">永久买断</string>
+    <string name="premium_lifetime_price">￥49.99 / 终身</string>
+    <string name="premium_contact_title">请选择升级通道联系客服</string>
+    <string name="premium_restore">恢复购买</string>
+    <string name="premium_wechat">微信: jenniec257 (点击复制)</string>
+    <string name="premium_whatsapp">WhatsApp (点击扫码)</string>
+    <string name="premium_copied">微信号 jenniec257 已复制！快去微信添加吧</string>
+    <string name="premium_whatsapp_qr_title">扫码添加客服 WhatsApp</string>
+    <string name="premium_whatsapp_qr_hint">长按保存二维码，使用 WhatsApp 相机扫描即可添加</string>
+    <string name="premium_qr_saved_toast">二维码图片已保存到系统相册！</string>
+    <string name="premium_disclaimer_title">独立开发者承诺 &amp; 免责声明</string>
+    <string name="premium_disclaimer_desc">本软件由个人独立开发，纯粹出于对多肉的热爱。我们极其尊重您的隐私，所有植物数据和照片均安全存储，绝不会被公开分享、滥用或出售给第三方。\n\n您的升级将被视为对独立开发者的赞助与支持，感谢您帮助 MySuccu 走得更远！</string>
 
-    <string name="msg_open_filter">打开高级筛选</string>
-    <string name="msg_open_search">打开搜索栏</string>
-    <string name="msg_return_level">返回到层级: %1$s</string>
-    <string name="msg_add_tag">添加新标签</string>
-    <string name="msg_add_folder">新增分类文件夹</string>
+    <string name="permission_camera_title">需要相机权限</string>
+    <string name="permission_camera_desc">为了给多肉拍下美美的定妆照，我们需要使用你的相机哦。</string>
+    <string name="permission_location_title">需要定位权限</string>
+    <string name="permission_location_desc">为了获取所在地的和风天气预报与微气候预警，请允许获取位置信息。</string>
+    <string name="permission_grant">去授权</string>
+    <string name="permission_deny">暂时不要</string>
+
+    <string name="theme_select_title">外观与色卡</string>
+    <string name="theme_applied">已应用该色卡！</string>
+    <string name="theme_1">深林秘境风</string>
+    <string name="theme_2">莫兰迪薄荷</string>
+    <string name="theme_3">暖阳奶油风</string>
+    <string name="theme_4">冰玉冷淡风</string>
+    <string name="theme_5">甜心泡泡糖</string>
+    <string name="theme_6">晚霞胭脂风</string>
+    <string name="theme_7">复古红陶风</string>
+    <string name="theme_8">官方默认款</string>
+    <string name="theme_9">极客深海风</string>
+
 </resources>

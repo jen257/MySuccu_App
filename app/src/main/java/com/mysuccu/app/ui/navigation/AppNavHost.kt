@@ -2,17 +2,12 @@ package com.mysuccu.app.ui.navigation
 
 import android.content.Context
 import android.content.ContextWrapper
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.mysuccu.app.MainActivity // 🚀 确保引入
+import com.mysuccu.app.MainActivity
 import com.mysuccu.app.ui.archive.PlantDetailScreen
 import com.mysuccu.app.ui.calendar.CalendarScreen
 import com.mysuccu.app.ui.home.HomeScreen
@@ -22,6 +17,8 @@ import com.mysuccu.app.ui.log.AddPlantScreen
 import com.mysuccu.app.ui.log.AddLogScreen
 import com.mysuccu.app.ui.settings.PremiumScreen
 import com.mysuccu.app.ui.settings.ThemeSelectScreen
+import com.mysuccu.app.ui.settings.LoginScreen
+import com.mysuccu.app.ui.settings.AccountSettingsScreen
 
 @Composable
 fun AppNavHost(
@@ -85,7 +82,9 @@ fun AppNavHost(
                 onNavigateToWeather = { navigateToBottomTab(NavRoutes.Weather.route) },
                 onNavigateToCalendar = { navigateToBottomTab(NavRoutes.Calendar.route) },
                 onNavigateToPremium = { navController.navigate(NavRoutes.Premium.route) },
-                onNavigateToTheme = { navController.navigate(NavRoutes.Theme.route) }
+                onNavigateToTheme = { navController.navigate(NavRoutes.Theme.route) },
+                // 🚀 核心修复：补充你在 SettingsScreen 新加的回调，打通右上角按钮！
+                onNavigateToAccount = { navController.navigate(NavRoutes.Account.route) }
             )
         }
 
@@ -109,7 +108,6 @@ fun AppNavHost(
             )
         }
 
-        // 🚀 核心修复点：使用 findMainActivity 溯源器解包 Context，无缝联动真正的相册写入流
         composable(NavRoutes.Premium.route) {
             PremiumScreen(
                 onBack = { navController.popBackStack() },
@@ -124,11 +122,29 @@ fun AppNavHost(
                 onBack = { navController.popBackStack() }
             )
         }
+
+        composable(NavRoutes.Login.route) {
+            LoginScreen(
+                onBack = { navController.popBackStack() },
+                onLoginSuccess = {
+                    navController.navigate(NavRoutes.Home.route) {
+                        popUpTo(NavRoutes.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // 成功挂载：账号与安全管理页
+        composable(NavRoutes.Account.route) {
+            AccountSettingsScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 
 /**
- * 🚀 辅助防爆核心：专门解包系统的 ContextWrapper 伪装
+ * 辅助防爆核心：专门解包系统的 ContextWrapper 伪装
  * 确保顺着环境树一定能拿到最根本的 MainActivity 实例
  */
 fun Context.findMainActivity(): MainActivity? {

@@ -33,8 +33,11 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
 import kotlinx.coroutines.launch
 
@@ -395,7 +398,7 @@ fun ManagementItem(painter: Painter, label: String, textColor: Color, onClick: (
     }
 }
 
-// 养护记录弹窗内容
+// 养护记录弹窗内容 (✅ 包含双行换行、居中对齐、动态高度修复)
 @Composable
 fun LogCareBottomSheetContent(onActionClick: (String) -> Unit, onMilestoneClick: () -> Unit) {
     val careActions = listOf(
@@ -411,12 +414,36 @@ fun LogCareBottomSheetContent(onActionClick: (String) -> Unit, onMilestoneClick:
     Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp).fillMaxWidth()) {
         Text(stringResource(R.string.sort_latest_water), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(20.dp))
-        LazyVerticalGrid(columns = GridCells.Fixed(4), modifier = Modifier.height(180.dp), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp), userScrollEnabled = false) {
+
+        // 🚀 使用 wrapContentHeight() 自适应网格高度，避免长英文被切断
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            modifier = Modifier.wrapContentHeight(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            userScrollEnabled = false
+        ) {
             items(careActions) { action ->
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)).clickable { onActionClick(action.first) }.padding(8.dp)) {
-                    Box(modifier = Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)), contentAlignment = Alignment.Center) { Icon(painterResource(action.second), null, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary) }
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)).clickable { onActionClick(action.first) }.padding(8.dp)
+                ) {
+                    Box(modifier = Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)), contentAlignment = Alignment.Center) {
+                        Icon(painterResource(action.second), null, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary)
+                    }
                     Spacer(Modifier.height(4.dp))
-                    Text(action.first, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface, maxLines = 1)
+
+                    // 🚀 核心文字排版：允许双行、全局居中、过长省略
+                    Text(
+                        text = action.first,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 14.sp,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
