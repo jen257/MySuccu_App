@@ -58,7 +58,7 @@
     <string name="plant_price">Price</string>
     <string name="plant_tag">Tag</string>
     <string name="plant_cost_total">Total Cost</string>
-    <string name="plant_headshot">Succulent Profile Photo</string>
+    <string name="plant_headshot">Tap to upload a photo (max 3)</string>
     <string name="view_photos">View Glamour Shots</string>
     <string name="description">Story</string>
     <string name="record_status">Record a Status</string>
@@ -77,7 +77,7 @@
     <string name="action_water">Water</string>
     <string name="action_fertilize">Fertilize</string>
     <string name="action_repot">Repot</string>
-    <string name="action_trim_roots">Trim</string>
+    <string name="action_trim_roots">Trim Root</string>
     <string name="action_medicine">Meds</string>
     <string name="action_bug">Pest Control</string>
     <string name="action_prune">Prune</string>
@@ -87,6 +87,28 @@
     <string name="template_water_fertilize">Quick: Water and Fertilize</string>
     <string name="record_action">Recorded: %1$s</string>
     <string name="manage_action">Action: %1$s</string>
+
+    <string name="upload_image">Upload Image</string>
+    <string name="basic_info">Basic Info</string>
+    <string name="classification">Classification</string>
+    <string name="care_preferences">Care Preferences</string>
+    <string name="care_tasks">Care Tasks</string>
+    <string name="sunlight_req">Sunlight</string>
+    <string name="sunlight_full">Full Sun</string>
+    <string name="sunlight_partial">Partial Sun</string>
+    <string name="sunlight_shade">Shade</string>
+    <string name="env_req">Environment</string>
+    <string name="env_indoor">Indoor (Enclosed)</string>
+    <string name="env_outdoor">Outdoor (Exposed)</string>
+    <string name="archive_plant">Archive Plant</string>
+    <string name="archive_plant_desc">Hide from active dashboard</string>
+    <string name="pot_cost">Pot Cost</string>
+    <string name="soil_cost">Soil Cost</string>
+    <string name="env_indoor_light">Indoor (Grow Light)</string>
+    <string name="env_indoor_diffuse">Indoor (Diffuse)</string>
+    <string name="env_outdoor_exposed">Outdoor (Exposed)</string>
+    <string name="env_balcony_sheltered">Balcony (Sheltered)</string>
+    <string name="sunlight_bright">Bright Indirect</string>
 
     <string name="status_healthy">Healthy</string>
     <string name="status_warning">Needs Attention</string>
@@ -168,9 +190,40 @@
     <string name="settings_theme">Appearance &amp; Themes</string>
     <string name="settings_pro_title">Upgrade to Pro</string>
     <string name="settings_pro_desc">Unlock unlimited capacity and 9 premium color palettes.</string>
-    <string name="settings_about">About</string>
     <string name="settings_about_us">About Us</string>
     <string name="settings_feedback">Feedback</string>
+
+    <string name="feedback_title">Feedback</string>
+    <string name="feedback_hint">Tell us your thoughts...</string>
+    <string name="feedback_submit">Submit</string>
+    <string name="feedback_success">Success!</string>
+    <string name="feedback_error">Error!</string>
+    <string name="feedback_type_title">Subject</string>
+    <string name="feedback_type_feature">Feature</string>
+    <string name="feedback_type_bug">Bug</string>
+    <string name="feedback_type_data">Data</string>
+    <string name="feedback_type_other">Other</string>
+    <string name="feedback_content_title">Details</string>
+    <string name="feedback_contact_title">Contact (Optional)</string>
+    <string name="feedback_contact_hint">Email or Phone</string>
+    <string name="feedback_anonymous">Anonymous</string>
+    <string name="feedback_anonymous_desc">Hide contact info</string>
+
+    <string name="about_title_intro">About MySuccu</string>
+    <string name="about_desc_intro">MySuccu is a professional succulent archival app focused on care records, offering a pure utility experience with no social bloat and no intrusive ads.\n\nIndependently designed and maintained by a solo developer, with no corporate entity. The goal is to provide a lightweight, offline-ready, and fully self-controlled private care tool.</string>
+    <string name="about_title_data">1. Data Ownership</string>
+    <string name="about_desc_data">Built on an \"offline-first\" architecture, all records are stored locally. Supports one-tap export to Excel/JSON. We do not lock you into accounts or force cloud storage.</string>
+    <string name="about_title_privacy">2. Privacy First</string>
+    <string name="about_desc_privacy">This app will never collect, upload, share, or sell any of your personal info or plant archives. We only request necessary permissions and strictly prohibit background data scraping.</string>
+    <string name="about_title_no_ads">3. Pure Experience</string>
+    <string name="about_desc_no_ads">Free of startup ads, pop-ups, feed distractions, and social engineering. We strive to keep the tool pure, letting you focus entirely on your plants.</string>
+    <string name="about_title_focus">4. Lightweight Iteration</string>
+    <string name="about_desc_focus">We concentrate on refining core features—record keeping, classification, calendar, and stats. We refuse to chase trends by adding social media or e-commerce modules.</string>
+    <string name="about_title_premium">About Paid Features</string>
+    <string name="about_desc_premium">Basic features are permanently free. Premium memberships unlock aesthetic themes and unlimited capacity.\nAll revenue is used strictly to cover server and maintenance costs. The free version is more than enough for daily use.</string>
+    <string name="about_title_developer">Developer\'s Message</string>
+    <string name="about_desc_developer">Born from passion, returned to purity.\nI built this app to give every enthusiast a clean, quiet, and secure space for their records. Thank you for supporting an independent developer.</string>
+
     <string name="settings_logout">Log Out</string>
     <string name="settings_garden_capacity">Garden Storage</string>
     <string name="garden_capacity_format">%1$d / %2$d</string>
