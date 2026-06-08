@@ -15,10 +15,13 @@ import com.mysuccu.app.ui.settings.SettingsScreen
 import com.mysuccu.app.ui.weather.WeatherScreen
 import com.mysuccu.app.ui.log.AddPlantScreen
 import com.mysuccu.app.ui.log.AddLogScreen
+import com.mysuccu.app.ui.log.EditPlantScreen
 import com.mysuccu.app.ui.settings.PremiumScreen
 import com.mysuccu.app.ui.settings.ThemeSelectScreen
 import com.mysuccu.app.ui.settings.LoginScreen
 import com.mysuccu.app.ui.settings.AccountSettingsScreen
+import com.mysuccu.app.ui.settings.AboutUsScreen
+import com.mysuccu.app.ui.settings.FeedbackScreen
 
 @Composable
 fun AppNavHost(
@@ -83,14 +86,16 @@ fun AppNavHost(
                 onNavigateToCalendar = { navigateToBottomTab(NavRoutes.Calendar.route) },
                 onNavigateToPremium = { navController.navigate(NavRoutes.Premium.route) },
                 onNavigateToTheme = { navController.navigate(NavRoutes.Theme.route) },
-                // 🚀 核心修复：补充你在 SettingsScreen 新加的回调，打通右上角按钮！
-                onNavigateToAccount = { navController.navigate(NavRoutes.Account.route) }
+                onNavigateToAccount = { navController.navigate(NavRoutes.Account.route) },
+                onNavigateToAboutUs = { navController.navigate(NavRoutes.AboutUs.route) },
+                onNavigateToFeedback = { navController.navigate(NavRoutes.Feedback.route) }
             )
         }
 
         composable(NavRoutes.Detail.route) {
             PlantDetailScreen(
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onEditClick = { navController.navigate(NavRoutes.EditPlant.route) }
             )
         }
 
@@ -98,6 +103,15 @@ fun AppNavHost(
             AddPlantScreen(
                 onBack = { navController.popBackStack() },
                 onSave = { navController.popBackStack() }
+            )
+        }
+
+        composable(NavRoutes.EditPlant.route) {
+            EditPlantScreen(
+                onBack = { navController.popBackStack() },
+                onSave = {
+                    navController.popBackStack()
+                }
             )
         }
 
@@ -134,19 +148,24 @@ fun AppNavHost(
             )
         }
 
-        // 成功挂载：账号与安全管理页
         composable(NavRoutes.Account.route) {
             AccountSettingsScreen(
                 onBack = { navController.popBackStack() }
             )
         }
+
+        composable(NavRoutes.AboutUs.route) {
+            AboutUsScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(NavRoutes.Feedback.route) {
+            FeedbackScreen(onBack = { navController.popBackStack() })
+        }
     }
 }
 
-/**
- * 辅助防爆核心：专门解包系统的 ContextWrapper 伪装
- * 确保顺着环境树一定能拿到最根本的 MainActivity 实例
- */
 fun Context.findMainActivity(): MainActivity? {
     var currentContext = this
     while (currentContext is ContextWrapper) {

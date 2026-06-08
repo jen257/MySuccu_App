@@ -12,7 +12,7 @@ import androidx.core.view.WindowCompat
 
 @Composable
 fun MySuccuAppTheme(
-    themeId: Int = 8, // 🚀 这里的 ID 将决定全 App 的视觉灵魂
+    themeId: Int = 8, // 这里的 ID 将决定全 App 的视觉灵魂
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

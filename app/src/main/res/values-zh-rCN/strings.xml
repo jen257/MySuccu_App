@@ -58,7 +58,7 @@
     <string name="plant_price">价格</string>
     <string name="plant_tag">标签</string>
     <string name="plant_cost_total">总计花费</string>
-    <string name="plant_headshot">添加肉肉的大头照</string>
+    <string name="plant_headshot">点击添加肉肉的大头照（最多三张）</string>
     <string name="view_photos">查看靓照</string>
     <string name="description">写写它的故事</string>
     <string name="record_status">记录肉肉的状态</string>
@@ -87,6 +87,29 @@
     <string name="template_water_fertilize">一键浇水+施肥</string>
     <string name="record_action">已记录: %1$s</string>
     <string name="manage_action">操作: %1$s</string>
+
+    <string name="upload_image">上传照片</string>
+    <string name="basic_info">基本信息</string>
+    <string name="classification">科属分类</string>
+    <string name="care_preferences">养护设置</string>
+    <string name="care_tasks">日常任务</string>
+    <string name="sunlight_req">光照需求</string>
+    <string name="sunlight_full">全日照</string>
+    <string name="sunlight_partial">半日照</string>
+    <string name="sunlight_shade">耐阴</string>
+    <string name="env_req">养护环境</string>
+    <string name="env_indoor">室内封闭</string>
+    <string name="env_outdoor">室外露养</string>
+    <string name="archive_plant">归档植物</string>
+    <string name="archive_plant_desc">隐藏并移出激活花园</string>
+    <string name="pot_cost">盆器花费</string>
+    <string name="soil_cost">土壤花费</string>
+    <string name="env_indoor_light">室内灯养</string>
+    <string name="env_indoor_diffuse">室内散光</string>
+    <string name="env_outdoor_exposed">户外露天</string>
+    <string name="env_balcony_sheltered">阳台（有遮挡）</string>
+    <string name="sunlight_bright">明亮散光</string>
+
 
     <string name="status_healthy">健康生长</string>
     <string name="status_warning">状态不佳</string>
@@ -169,9 +192,39 @@
     <string name="settings_theme">外观与色卡主题</string>
     <string name="settings_pro_title">升级 Pro 会员</string>
     <string name="settings_pro_desc">解锁无限容量与 9 组高定多肉色卡</string>
-    <string name="settings_about">关于</string>
     <string name="settings_about_us">关于我们</string>
     <string name="settings_feedback">意见反馈</string>
+    <string name="feedback_title">意见反馈</string>
+    <string name="feedback_hint">告诉我们你的想法、新功能建议或遇到的 Bug...</string>
+    <string name="feedback_submit">发送反馈</string>
+    <string name="feedback_success">反馈已发送，感谢你的支持！</string>
+    <string name="feedback_error">发送失败，请检查网络</string>
+    <string name="feedback_type_title">反馈类型</string>
+    <string name="feedback_type_feature">功能建议</string>
+    <string name="feedback_type_bug">遇到 Bug</string>
+    <string name="feedback_type_data">植物资料纠错</string>
+    <string name="feedback_type_other">其他问题</string>
+    <string name="feedback_content_title">详细内容</string>
+    <string name="feedback_contact_title">联系方式 (选填)</string>
+    <string name="feedback_contact_hint">留下邮箱或微信号</string>
+    <string name="feedback_anonymous">匿名提交</string>
+    <string name="feedback_anonymous_desc">勾选后我们将无法主动联系您</string>
+
+    <string name="about_title_intro">关于 MySuccu</string>
+    <string name="about_desc_intro">MySuccu 是一款专注多肉养护记录、纯工具属性、无社交冗余、无广告打扰的专业多肉档案管理应用。\n\n产品由独立开发者全程自主设计、开发、维护，无公司主体、无商业团队背书，初衷只为给广大多肉爱好者，打造一款轻量化、功能完整、离线可用、数据完全自主掌控的私人养护工具。</string>
+    <string name="about_title_data">1. 数据归你，自主可控</string>
+    <string name="about_desc_data">App 采用离线优先架构，所有数据优先本地存储。支持 Excel / JSON 一键导出，不强制云端留存，数据主权完全在用户手中。</string>
+    <string name="about_title_privacy">2. 严格隐私，绝不外泄</string>
+    <string name="about_desc_privacy">本应用不会私自收集、上传、共享、售卖你的任何个人信息、多肉档案及使用习惯。仅申请必要权限，绝不后台静默上传隐私数据。</string>
+    <string name="about_title_no_ads">3. 全程无广，拒绝打扰</string>
+    <string name="about_desc_no_ads">永久无开屏广告、无弹窗广告、无信息流推荐、无社交强制引流。保持工具最纯粹的质感，让你专注养肉。</string>
+    <string name="about_title_focus">4. 轻量迭代，专注工具</string>
+    <string name="about_desc_focus">只专注打磨多肉记录与养护等核心功能，不盲目跟风做社区或电商导流，长期保持精简、稳定、流畅。</string>
+    <string name="about_title_premium">关于应用与付费</string>
+    <string name="about_desc_premium">本应用为个人独立开发的纯粹工具作品，基础核心功能永久免费开放，不阉割刚需。\n\n仅通过会员解锁高级外观与无限容量；所有收益仅用于覆盖服务器与长期维护成本。免费版完全够用，进阶自愿解锁。</string>
+    <string name="about_title_developer">开发者寄语</string>
+    <string name="about_desc_developer">始于热爱，归于纯粹。\n做这款应用，只是希望给每一位爱好者一个干净、安静、靠谱的数据记录本。感谢愿意选择、包容并支持独立开发者的你，愿 MySuccu 陪你见证每一颗多肉的生长与沉淀。</string>
+
     <string name="settings_logout">退出登录</string>
     <string name="settings_garden_capacity">花园坑位容量</string>
     <string name="garden_capacity_format">%1$d / %2$d</string>

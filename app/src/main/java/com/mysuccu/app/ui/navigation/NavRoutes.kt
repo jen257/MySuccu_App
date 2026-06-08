@@ -14,6 +14,7 @@ sealed class NavRoutes(val route: String) {
 
     // 二级详情页
     object Detail : NavRoutes("detail")
+    object EditPlant : NavRoutes("edit_plant")
 
     // 商业化与高定页
     object Premium : NavRoutes("premium")
@@ -26,4 +27,7 @@ sealed class NavRoutes(val route: String) {
     // 鉴权与账号页
     object Login : NavRoutes("login")
     object Account : NavRoutes("account")
+
+    object AboutUs : NavRoutes("about_us")
+    object Feedback : NavRoutes("feedback")
 }

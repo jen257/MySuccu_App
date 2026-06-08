@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.mysuccu.app.R
 import com.mysuccu.app.ui.components.SuccuPullToRefresh
@@ -39,180 +40,71 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    viewModel: SettingsViewModel = viewModel(),
     onNavigateToHome: () -> Unit,
     onNavigateToWeather: () -> Unit,
     onNavigateToCalendar: () -> Unit,
     onNavigateToPremium: () -> Unit,
     onNavigateToTheme: () -> Unit,
-    onNavigateToAccount: () -> Unit
+    onNavigateToAccount: () -> Unit,
+    onNavigateToAboutUs: () -> Unit,
+    onNavigateToFeedback: () -> Unit
 ) {
-    var isLoading by remember { mutableStateOf(true) }
+    val uiState by viewModel.uiState.collectAsState()
     var isRefreshing by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-
-    val isProUser = false
-    val currentPlantCount = 12
-    val maxPlantCount = 20
-
-    // 🚀 核心优化：获取当前的默认多语言昵称
-    val defaultUserName = stringResource(id = R.string.default_username)
-    // 使用 null 代表用户从未修改过昵称。这样切换语言时，它会自动读取新的 defaultUserName！
-    var customUserName by remember { mutableStateOf<String?>(null) }
-    val displayUserName = customUserName ?: defaultUserName
-    val isDefaultName = customUserName == null
-
-    var userAvatarUri by remember { mutableStateOf<Uri?>(null) }
-
     var showEditNameDialog by remember { mutableStateOf(false) }
     var tempName by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+
+    val defaultUserName = stringResource(id = R.string.default_username)
+    val displayUserName = uiState.customUserName ?: defaultUserName
+    val isDefaultName = uiState.customUserName == null
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> if (uri != null) userAvatarUri = uri }
+        onResult = { uri -> if (uri != null) viewModel.updateUserAvatar(uri) }
     )
-
-    LaunchedEffect(Unit) {
-        delay(1000)
-        isLoading = false
-    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.nav_profile),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                },
-                actions = {
-                    IconButton(onClick = onNavigateToAccount) {
-                        Icon(painter = painterResource(id = R.drawable.ic_user_settings), contentDescription = "Account Settings", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
-                    }
-                },
+                title = { Text(stringResource(id = R.string.nav_profile), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary) },
+                actions = { IconButton(onClick = onNavigateToAccount) { Icon(painterResource(id = R.drawable.ic_user_settings), null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp)) } },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
             )
         },
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            ) {
-                NavigationBarItem(selected = false, onClick = onNavigateToHome, icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_home)) })
-                NavigationBarItem(selected = false, onClick = onNavigateToWeather, icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_weather)) })
-                NavigationBarItem(selected = false, onClick = onNavigateToCalendar, icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_calendar)) })
-                NavigationBarItem(selected = true, onClick = { }, icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null, Modifier.size(24.dp)) }, label = { Text(stringResource(id = R.string.nav_profile)) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary, indicatorColor = MaterialTheme.colorScheme.primaryContainer))
+            NavigationBar(containerColor = MaterialTheme.colorScheme.surface, modifier = Modifier.shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))) {
+                NavigationBarItem(selected = false, onClick = onNavigateToHome, icon = { Icon(painterResource(id = R.drawable.ic_plant_nav), null) }, label = { Text(stringResource(id = R.string.nav_home)) })
+                NavigationBarItem(selected = false, onClick = onNavigateToWeather, icon = { Icon(painterResource(id = R.drawable.ic_weather_nav), null) }, label = { Text(stringResource(id = R.string.nav_weather)) })
+                NavigationBarItem(selected = false, onClick = onNavigateToCalendar, icon = { Icon(painterResource(id = R.drawable.ic_calendar_nav), null) }, label = { Text(stringResource(id = R.string.nav_calendar)) })
+                NavigationBarItem(selected = true, onClick = {}, icon = { Icon(painterResource(id = R.drawable.ic_me_nav), null) }, label = { Text(stringResource(id = R.string.nav_profile)) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary, indicatorColor = MaterialTheme.colorScheme.primaryContainer))
             }
         }
     ) { innerPadding ->
-        SuccuPullToRefresh(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                isRefreshing = true
-                scope.launch { isLoading = true; delay(1200); isLoading = false; isRefreshing = false }
-            },
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                if (isLoading) {
-                    item { ProfileSkeleton() }
-                } else {
+        SuccuPullToRefresh(isRefreshing = isRefreshing, onRefresh = { isRefreshing = true; scope.launch { viewModel.refreshData(); delay(1200); isRefreshing = false } }, modifier = Modifier.padding(innerPadding)) {
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp), contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                if (uiState.isLoading) { item { ProfileSkeleton() } } else {
+                    item { UserHeaderSection(uiState.isProUser, displayUserName, isDefaultName, uiState.userAvatarUri, { photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) }, { tempName = if (isDefaultName) "" else displayUserName; showEditNameDialog = true }) }
+                    if (!uiState.isProUser) item { PremiumBannerCard(onUpgradeClick = onNavigateToPremium) }
+                    item { BentoStatusSection(uiState.currentPlantCount, uiState.maxPlantCount) {} }
+                    item { SettingsGroup(stringResource(R.string.settings_theme)) { SettingsRow(painterResource(R.drawable.ic_palette_custom), stringResource(R.string.settings_theme), onClick = onNavigateToTheme) } }
+                    item { SettingsGroup(stringResource(R.string.settings_group_data)) { SettingsRow(painterResource(R.drawable.ic_cloud_refresh__custom), stringResource(R.string.settings_sync), showSwitch = true); SettingsRow(painterResource(R.drawable.ic_download_custom), stringResource(R.string.settings_export), onClick = {}) } }
                     item {
-                        UserHeaderSection(
-                            isProUser = isProUser,
-                            userName = displayUserName,
-                            isDefaultName = isDefaultName, // 🚀 传入状态判断颜色
-                            userAvatarUri = userAvatarUri,
-                            onEditAvatar = {
-                                photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                            },
-                            onEditName = {
-                                // 打开弹窗时，如果还是默认昵称，输入框留空，否则填入旧昵称
-                                tempName = if (isDefaultName) "" else displayUserName
-                                showEditNameDialog = true
-                            }
-                        )
-                    }
-
-                    if (!isProUser) item { PremiumBannerCard(onUpgradeClick = onNavigateToPremium) }
-
-                    item { BentoStatusSection(currentCount = currentPlantCount, maxCount = maxPlantCount, onFinanceClick = {}) }
-
-                    item {
-                        SettingsGroup(title = stringResource(id = R.string.settings_theme)) {
-                            SettingsRow(icon = painterResource(id = R.drawable.ic_palette_custom), title = stringResource(id = R.string.settings_theme), onClick = onNavigateToTheme)
-                        }
-                    }
-
-                    item {
-                        SettingsGroup(title = stringResource(id = R.string.settings_group_data)) {
-                            SettingsRow(icon = painterResource(id = R.drawable.ic_cloud_refresh__custom), title = stringResource(id = R.string.settings_sync), showSwitch = true)
-                            SettingsRow(icon = painterResource(id = R.drawable.ic_download_custom), title = stringResource(id = R.string.settings_export), onClick = {})
-                        }
-                    }
-
-                    item {
-                        SettingsGroup(title = stringResource(id = R.string.settings_group_about)) {
-                            SettingsRow(icon = painterResource(id = R.drawable.ic_info), title = stringResource(id = R.string.settings_about_us), onClick = {})
-                            SettingsRow(icon = painterResource(id = R.drawable.ic_feedback), title = stringResource(id = R.string.settings_feedback), onClick = {})
-                            SettingsRow(icon = painterResource(id = R.drawable.ic_log_out_custom), title = stringResource(id = R.string.settings_logout), titleColor = MaterialTheme.colorScheme.error, onClick = {})
+                        SettingsGroup(stringResource(R.string.settings_group_about)) {
+                            SettingsRow(painterResource(R.drawable.ic_info), stringResource(R.string.settings_about_us), onClick = onNavigateToAboutUs)
+                            SettingsRow(painterResource(R.drawable.ic_feedback), stringResource(R.string.settings_feedback), onClick = onNavigateToFeedback)
+                            SettingsRow(painterResource(R.drawable.ic_log_out_custom), stringResource(R.string.settings_logout), MaterialTheme.colorScheme.error, onClick = { /* TODO: 退出登录逻辑 */ })
                         }
                     }
                 }
             }
         }
 
+        // 命名弹窗
         if (showEditNameDialog) {
-            AlertDialog(
-                onDismissRequest = { showEditNameDialog = false },
-                containerColor = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(24.dp),
-                title = {
-                    Text(text = stringResource(R.string.edit_profile_name), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                },
-                text = {
-                    OutlinedTextField(
-                        value = tempName,
-                        onValueChange = { if (it.length <= 15) tempName = it },
-                        singleLine = true,
-                        shape = RoundedCornerShape(12.dp),
-                        placeholder = { Text(stringResource(R.string.name_input_hint), color = MaterialTheme.colorScheme.outline) },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            // 🚀 保存时逻辑判断：非空则保存自定义名字；如果清空了，则退回默认名字状态
-                            if (tempName.isNotBlank()) {
-                                customUserName = tempName
-                            } else {
-                                customUserName = null
-                            }
-                            showEditNameDialog = false
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                    ) {
-                        Text(stringResource(R.string.save), fontWeight = FontWeight.Bold)
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showEditNameDialog = false }) {
-                        Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.outline)
-                    }
-                }
-            )
+            AlertDialog(onDismissRequest = { showEditNameDialog = false }, containerColor = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(24.dp), title = { Text(stringResource(R.string.edit_profile_name), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }, text = { OutlinedTextField(value = tempName, onValueChange = { if (it.length <= 15) tempName = it }, singleLine = true, shape = RoundedCornerShape(12.dp), modifier = Modifier.fillMaxWidth()) }, confirmButton = { Button(onClick = { viewModel.updateUserName(tempName.ifBlank { null }); showEditNameDialog = false }) { Text(stringResource(R.string.save)) } }, dismissButton = { TextButton(onClick = { showEditNameDialog = false }) { Text(stringResource(R.string.cancel)) } })
         }
     }
 }
@@ -221,7 +113,7 @@ fun SettingsScreen(
 fun UserHeaderSection(
     isProUser: Boolean,
     userName: String,
-    isDefaultName: Boolean, // 🚀 接收状态
+    isDefaultName: Boolean,
     userAvatarUri: Uri?,
     onEditAvatar: () -> Unit,
     onEditName: () -> Unit
@@ -281,7 +173,6 @@ fun UserHeaderSection(
                     .padding(horizontal = 4.dp, vertical = 2.dp)
                     .offset(x = (-4).dp)
             ) {
-                // 🚀 核心样式：未编辑过较浅+常规字体；编辑过变深+加粗！
                 Text(
                     text = userName,
                     style = MaterialTheme.typography.titleLarge,
@@ -313,7 +204,6 @@ fun UserHeaderSection(
     }
 }
 
-// ... 剩下的组件 (PremiumBannerCard, BentoStatusSection 等保持原样)
 @Composable
 fun PremiumBannerCard(onUpgradeClick: () -> Unit) {
     Surface(

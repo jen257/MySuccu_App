@@ -16,8 +16,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.mysuccu.app.data.remote.SupabaseModule
 import com.mysuccu.app.ui.navigation.AppNavHost
 import com.mysuccu.app.ui.theme.MySuccuAppTheme
+import io.github.jan.supabase.gotrue.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.OutputStream
@@ -25,6 +27,15 @@ import java.io.OutputStream
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val app = application as MySuccuApplication
+        lifecycleScope.launch(Dispatchers.IO) {
+            val currentUser = SupabaseModule.client.auth.currentUserOrNull()
+            if (currentUser != null) {
+                app.plantRepository.syncAllPendingData(currentUser.id)
+            }
+        }
+
         enableEdgeToEdge()
         setContent {
             MySuccuAppTheme {
@@ -40,7 +51,7 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
-     * 🚀 工业级原生函数：将本地 R.drawable.whatsapp_qrcode 真正写入手机系统相册
+     *  工业级原生函数：将本地 R.drawable.whatsapp_qrcode 真正写入手机系统相册
      * 确保没有加 private 关键字，允许外部直接穿透调用
      */
     fun saveQrCodeToGallery() {

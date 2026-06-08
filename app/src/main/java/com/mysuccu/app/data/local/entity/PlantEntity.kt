@@ -3,14 +3,16 @@ package com.mysuccu.app.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity(tableName = "plant_table")
 data class PlantEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    // 🚀 核心改造 1：升级为 UUID 字符串，防止云端多设备数据冲突
+    @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
 
-    @ColumnInfo(name = "category_id")
-    val categoryId: Int, // 属于哪个分类
+    @ColumnInfo(name = "folder_id")
+    val folderId: String? = null,
 
     val name: String, // 多肉名称
 
@@ -41,5 +43,12 @@ data class PlantEntity(
     val repotDate: Long? = null, // 上盆日期
 
     @ColumnInfo(name = "image_urls")
-    val imageUrls: String? = null // 图片组地址 (JSON 格式存储多张图)
+    val imageUrls: String? = null, // 图片组地址 (JSON 格式存储多张图)
+
+    // 🚀 核心改造 2：云端同步专属标志位
+    @ColumnInfo(name = "is_synced")
+    val isSynced: Boolean = false, // 是否已同步到云端
+
+    @ColumnInfo(name = "updated_at")
+    val updatedAt: Long = System.currentTimeMillis() // 最后修改时间，解决冲突的依据
 )

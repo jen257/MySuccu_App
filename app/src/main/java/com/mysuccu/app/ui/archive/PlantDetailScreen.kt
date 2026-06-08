@@ -1,11 +1,9 @@
 package com.mysuccu.app.ui.archive
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -17,76 +15,52 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mysuccu.app.R
+import com.mysuccu.app.ui.components.SuccuPullToRefresh
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-fun Modifier.dashedBorder(color: Color, cornerRadius: Dp) = this.drawBehind {
-    drawRoundRect(
-        color = color,
-        cornerRadius = CornerRadius(cornerRadius.toPx()),
-        style = Stroke(
-            width = 1.dp.toPx(),
-            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-        )
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlantDetailScreen(onBack: () -> Unit) {
+fun PlantDetailScreen(
+    onBack: () -> Unit,
+    onEditClick: () -> Unit
+) {
     val sheetState = rememberModalBottomSheetState()
     val manageSheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    var isRefreshing by remember { mutableStateOf(false) }
     var showCareSheet by remember { mutableStateOf(false) }
     var showManageSheet by remember { mutableStateOf(false) }
 
-    // 菜单展开状态控制
-    var showCurrencyMenu by remember { mutableStateOf(false) }
-    var tagMenuExpandedItem by remember { mutableStateOf<String?>(null) }
-    var folderMenuExpandedItem by remember { mutableStateOf<String?>(null) }
+    // 核心状态数据 (纯展示)
+    val plantName by remember { mutableStateOf("我的橙梦露") }
+    val currentStatusRes by remember { mutableIntStateOf(R.string.status_healthy) }
+    val currencySymbol by remember { mutableStateOf("￥") }
 
-    //  核心状态数据
-    var plantName by remember { mutableStateOf("") }
-    var currencySymbol by remember { mutableStateOf("￥") }
-    val folders = remember { mutableStateListOf("番杏科", "肉锥属", "安珍") }
-    val tags = remember { mutableStateListOf("2026播种", "精品", "待换盆") }
-    var hasImages by remember { mutableStateOf(false) }
-
-    // 养护时长 (此处模拟从首页传递进来的 120 天，后续由上盆日期计算得出)
-    var careDays by remember { mutableIntStateOf(120) }
-
-    // 汇率选项
-    val currencyOptions = listOf(
-        "￥" to R.string.rmb,
-        "$" to R.string.usd,
-        "€" to R.string.eur,
-        "£" to R.string.gbp,
-        "RM" to R.string.rm_currency,
-        "HK$" to R.string.hkd_currency
-    )
+    val tags = remember { mutableStateListOf("2026", "Rare", "Needs Repot") }
+    val currentPlantPath by remember { mutableStateOf(listOf("花园大厅", "阳台", "景天科")) }
+    val environment = stringResource(R.string.env_closed_balcony)
+    val hasImages by remember { mutableStateOf(false) }
+    val careDays by remember { mutableIntStateOf(120) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -123,219 +97,152 @@ fun PlantDetailScreen(onBack: () -> Unit) {
         },
         floatingActionButtonPosition = FabPosition.Center
     ) { innerPadding ->
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())) {
-            // 1. 顶部大图区域
-            item {
-                Box(Modifier.fillMaxWidth().height(380.dp).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)).clickable { /* 添加照片 */ }) {
-                    Column(modifier = Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (!hasImages) {
-                            Icon(painterResource(R.drawable.ic_addimage_custom), null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
-                            Spacer(Modifier.height(8.dp))
-                            Text(stringResource(R.string.plant_headshot), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelSmall)
+        SuccuPullToRefresh(
+            isRefreshing = isRefreshing,
+            onRefresh = { isRefreshing = true; scope.launch { delay(1200); isRefreshing = false } },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())
+            ) {
+                // 1. 顶部大图区域 (浏览大图)
+                item {
+                    Box(Modifier.fillMaxWidth().height(380.dp).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)).clickable { /* TODO: 浏览全屏大图 */ }) {
+                        Column(modifier = Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally) {
+                            if (!hasImages) {
+                                Icon(painterResource(R.drawable.ic_addimage_custom), null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                                Spacer(Modifier.height(8.dp))
+                                Text(stringResource(R.string.plant_headshot), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelSmall)
+                            }
+                        }
+                        Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, MaterialTheme.colorScheme.background.copy(alpha = 0.8f)), startY = 600f)))
+                        Surface(Modifier.align(Alignment.BottomEnd).padding(bottom = 40.dp, end = 24.dp), shape = RoundedCornerShape(20.dp), color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)) {
+                            Text(stringResource(R.string.view_photos), Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium)
                         }
                     }
-                    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, MaterialTheme.colorScheme.background.copy(alpha = 0.8f)), startY = 600f)))
-                    Surface(Modifier.align(Alignment.BottomEnd).padding(bottom = 40.dp, end = 24.dp), shape = RoundedCornerShape(20.dp), color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)) {
-                        Text(stringResource(R.string.view_photos), Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelMedium)
-                    }
                 }
-            }
 
-            // 2. 核心信息面板
-            item {
-                Column(modifier = Modifier.padding(horizontal = 24.dp).offset(y = (-32).dp)) {
-                    Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 8.dp) {
-                        Column(modifier = Modifier.padding(20.dp)) {
-                            // 名字与状态
-                            Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
+                // 2. 核心信息面板 (纯展示)
+                item {
+                    Column(modifier = Modifier.padding(horizontal = 24.dp).offset(y = (-32).dp)) {
+                        Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.surface, shadowElevation = 8.dp) {
+                            Column(modifier = Modifier.padding(20.dp)) {
+                                // 名字与状态
+                                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                                     Text(text = plantName.ifEmpty { stringResource(R.string.plant_name_hint) }, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = if(plantName.isEmpty()) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.onSurface)
-                                    IconButton(onClick = { /* 修改名字 */ }, Modifier.size(32.dp)) { Icon(painterResource(R.drawable.ic_edit_custom), null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary) }
-                                }
-                                Surface(color = MaterialTheme.colorScheme.secondaryContainer, shape = RoundedCornerShape(50)) {
-                                    Text(stringResource(R.string.status_healthy), Modifier.padding(horizontal = 10.dp, vertical = 4.dp), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSecondaryContainer)
-                                }
-                            }
 
-                            // 归档路径联动显示
-                            Text(folders.joinToString(" > "), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
-
-                            Spacer(Modifier.height(16.dp))
-
-                            // 数据网格
-                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(12.dp)) {
-                                    // 养护时长联动多语言资源，并根据 careDays 动态显示
-                                    DetailStatItem(
-                                        modifier = Modifier.weight(1f),
-                                        painter = painterResource(R.drawable.ic_daysl_custom),
-                                        label = stringResource(R.string.plant_care_duration),
-                                        value = stringResource(R.string.days_format, careDays), // 显示如 "120 天"
-                                        isEditable = false
-                                    )
-                                    // 上盆日期 (修改此项将在 ViewModel 中触发 careDays 的重新计算)
-                                    DetailStatItem(Modifier.weight(1f), painterResource(R.drawable.ic_potting_custom), stringResource(R.string.plant_potting_date), "2023.10.15", isEditable = true) {
-                                        scope.launch { snackbarHostState.showSnackbar("修改上盆时间") }
+                                    // 纯展示状态标签
+                                    Surface(
+                                        color = MaterialTheme.colorScheme.secondaryContainer,
+                                        shape = RoundedCornerShape(50)
+                                    ) {
+                                        Text(stringResource(currentStatusRes), modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSecondaryContainer, fontWeight = FontWeight.Bold)
                                     }
                                 }
-                                Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(12.dp)) {
-                                    // 价格与汇率选择器
-                                    Box(Modifier.weight(1f)) {
-                                        DetailStatItem(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            painter = painterResource(R.drawable.ic_price_tag_custom),
-                                            label = stringResource(R.string.plant_price),
-                                            value = "$currencySymbol 45.00",
-                                            isEditable = true,
-                                            onClick = { /* 修改价格数字键盘 */ }
-                                        )
-                                        // 汇率点击热区
-                                        Box(Modifier.padding(start = 12.dp, top = 12.dp).size(24.dp).clickable { showCurrencyMenu = true })
-                                        DropdownMenu(expanded = showCurrencyMenu, onDismissRequest = { showCurrencyMenu = false }) {
-                                            currencyOptions.forEach { (symbol, nameResId) ->
-                                                DropdownMenuItem(
-                                                    text = { Text("$symbol  ${stringResource(nameResId)}", fontWeight = FontWeight.Medium) },
-                                                    onClick = { currencySymbol = symbol; showCurrencyMenu = false }
-                                                )
+
+                                Spacer(Modifier.height(16.dp))
+
+                                // 数据网格 (纯展示)
+                                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                    Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(12.dp)) {
+                                        DetailStatItem(modifier = Modifier.weight(1f), painter = painterResource(R.drawable.ic_daysl_custom), label = stringResource(R.string.plant_care_duration), value = stringResource(R.string.days_format, careDays))
+                                        DetailStatItem(Modifier.weight(1f), painterResource(R.drawable.ic_potting_custom), stringResource(R.string.plant_potting_date), "2023.10.15")
+                                    }
+                                    Row(Modifier.fillMaxWidth(), Arrangement.spacedBy(12.dp)) {
+                                        DetailStatItem(modifier = Modifier.weight(1f), painter = painterResource(R.drawable.ic_price_tag_custom), label = stringResource(R.string.plant_price), value = "$currencySymbol 45.00")
+                                        DetailStatItem(Modifier.weight(1f), painterResource(R.drawable.ic_arrival_custom), stringResource(R.string.plant_arrive_date), "2023.10.12")
+                                    }
+                                }
+
+                                Spacer(Modifier.height(20.dp))
+
+                                // 环境标签 (纯展示)
+                                Text(stringResource(R.string.env_req), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.outline)
+                                Spacer(Modifier.height(6.dp))
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    Surface(shape = RoundedCornerShape(8.dp), color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)) {
+                                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
+                                            Icon(painterResource(R.drawable.cloud_windy_line), null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSecondaryContainer)
+                                            Spacer(Modifier.width(6.dp))
+                                            Text(environment, color = MaterialTheme.colorScheme.onSecondaryContainer, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                                        }
+                                    }
+                                }
+
+                                Spacer(Modifier.height(20.dp))
+
+                                // Tag 系统 (纯展示)
+                                if (tags.isNotEmpty()) {
+                                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                        items(tags) { tag ->
+                                            Box(
+                                                modifier = Modifier.border(BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), RoundedCornerShape(8.dp)).padding(horizontal = 10.dp, vertical = 4.dp)
+                                            ) {
+                                                Text("# $tag", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                             }
                                         }
                                     }
-                                    DetailStatItem(Modifier.weight(1f), painterResource(R.drawable.ic_arrival_custom), stringResource(R.string.plant_arrive_date), "2023.10.12", isEditable = true) { /* 修改到家日期 */ }
-                                }
-                            }
-
-                            // Tag 系统：支持长按触发编辑/删除
-                            Spacer(Modifier.height(16.dp))
-                            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                                items(tags) { tag ->
-                                    Box {
-                                        Box(
-                                            modifier = Modifier
-                                                .border(BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), RoundedCornerShape(8.dp))
-                                                .combinedClickable(
-                                                    onClick = { /* 普通点击行为 */ },
-                                                    onLongClick = { tagMenuExpandedItem = tag }
-                                                )
-                                                .padding(horizontal = 10.dp, vertical = 4.dp)
-                                        ) {
-                                            Text("# $tag", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                        }
-
-                                        // 标签长按菜单
-                                        DropdownMenu(expanded = tagMenuExpandedItem == tag, onDismissRequest = { tagMenuExpandedItem = null }) {
-                                            DropdownMenuItem(
-                                                text = { Text(stringResource(R.string.edit)) },
-                                                onClick = { tagMenuExpandedItem = null; scope.launch { snackbarHostState.showSnackbar("编辑标签: $tag") } },
-                                                leadingIcon = { Icon(painterResource(R.drawable.ic_edit_custom), null, Modifier.size(18.dp)) }
-                                            )
-                                            DropdownMenuItem(
-                                                text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
-                                                onClick = { tags.remove(tag); tagMenuExpandedItem = null },
-                                                leadingIcon = { Icon(painterResource(R.drawable.ic_delete_custom), null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.error) }
-                                            )
-                                        }
-                                    }
-                                }
-                                item {
-                                    // 虚线框 Add Tag 按钮
-                                    Box(
-                                        modifier = Modifier
-                                            .height(24.dp).width(60.dp)
-                                            .dashedBorder(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), 8.dp)
-                                            .clickable { /* 添加标签弹窗 */ },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(painterResource(R.drawable.ic_tag_custom), null, Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary)
-                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            // 3. 记录故事
-            item {
-                Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                    Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+                // 3. 记录故事 (纯展示)
+                item {
+                    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(stringResource(R.string.description), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        IconButton(onClick = { }) { Icon(painterResource(R.drawable.ic_edit_custom), null, Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary) }
-                    }
-                    Surface(Modifier.fillMaxWidth().padding(top = 8.dp), color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp), border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
-                        Text(stringResource(R.string.onboarding_title), Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Surface(Modifier.fillMaxWidth().padding(top = 8.dp), color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp), border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
+                            Text(stringResource(R.string.onboarding_title), Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 }
-            }
 
-            // 4. 归档文件夹 (支持长按呼出层级编辑器/删除)
-            item {
-                Column(modifier = Modifier.padding(top = 24.dp)) {
-                    Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+                // 4. 归档位置 (面包屑纯展示)
+                item {
+                    Column(modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp)) {
                         Text(stringResource(R.string.record_file), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                    }
-                    LazyRow(contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                        items(folders) { folder ->
-                            Box {
-                                Surface(
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f),
-                                    modifier = Modifier.combinedClickable(
-                                        onClick = { /* 打开夹内详情 */ },
-                                        onLongClick = { folderMenuExpandedItem = folder }
-                                    )
-                                ) {
-                                    Text(folder, Modifier.padding(horizontal = 12.dp, vertical = 8.dp), color = MaterialTheme.colorScheme.onSecondaryContainer, style = MaterialTheme.typography.labelLarge)
-                                }
 
-                                // 文件夹长按菜单
-                                DropdownMenu(expanded = folderMenuExpandedItem == folder, onDismissRequest = { folderMenuExpandedItem = null }) {
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.edit)) },
-                                        onClick = {
-                                            folderMenuExpandedItem = null
-                                            scope.launch { snackbarHostState.showSnackbar("打开层级编辑器: $folder") }
-                                        },
-                                        leadingIcon = { Icon(painterResource(R.drawable.ic_edit_custom), null, Modifier.size(18.dp)) }
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) },
-                                        onClick = { folders.remove(folder); folderMenuExpandedItem = null },
-                                        leadingIcon = { Icon(painterResource(R.drawable.ic_delete_custom), null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.error) }
-                                    )
-                                }
-                            }
-                        }
-                        item {
-                            // 文件夹添加按钮：真实虚线框
-                            Box(
-                                modifier = Modifier
-                                    .height(34.dp).width(50.dp)
-                                    .dashedBorder(MaterialTheme.colorScheme.primary.copy(alpha = 0.6f), 12.dp)
-                                    .clickable { /* 新增分类弹窗 */ },
-                                contentAlignment = Alignment.Center
+                        Surface(
+                            modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(Icons.Default.Add, null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
+                                Icon(painterResource(R.drawable.ic_folder), null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    text = currentPlantPath.joinToString(" / "),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
+                                )
                             }
                         }
                     }
                 }
-            }
 
-            // 5. 里程碑 & 6. 养护记录
-            item { Text(stringResource(R.string.milestone_title), Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 12.dp), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }
-            items(count = 2) { index -> DetailTimelineItem(title = if(index == 0) stringResource(R.string.milestone_new_leaf) else stringResource(R.string.milestone_cluster), date = "05.11", content = stringResource(R.string.view_photos), isLatest = index == 0, isLast = false, painter = painterResource(id = R.drawable.ic_plant_nav)) }
-            item { Text(stringResource(R.string.sort_latest_water), Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 12.dp), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }
-            items(count = 2) { index -> DetailTimelineItem(title = if(index == 0) stringResource(R.string.action_water) else stringResource(R.string.action_fertilize), date = stringResource(R.string.days_ago_format, index + 3), content = "", isLatest = false, isLast = index == 1, painter = if(index == 0) painterResource(R.drawable.ic_water_drop_custom) else painterResource(R.drawable.ic_fertilize_custom)) }
-            item { Spacer(Modifier.height(120.dp)) }
-        }
-        if (showCareSheet) {
-            ModalBottomSheet(onDismissRequest = { showCareSheet = false }, sheetState = sheetState) {
-                LogCareBottomSheetContent(
-                    onActionClick = { scope.launch { showCareSheet = false; snackbarHostState.showSnackbar("已记录: $it") } },
-                    onMilestoneClick = { showCareSheet = false }
-                )
+                // 5. 里程碑 & 6. 养护记录
+                item { Text(stringResource(R.string.milestone_title), Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 12.dp), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }
+                items(count = 2) { index -> DetailTimelineItem(title = if(index == 0) stringResource(R.string.milestone_new_leaf) else stringResource(R.string.milestone_cluster), date = "05.11", content = stringResource(R.string.view_photos), isLatest = index == 0, isLast = false, painter = painterResource(id = R.drawable.ic_plant_nav)) }
+                item { Text(stringResource(R.string.sort_latest_water), Modifier.padding(start = 24.dp, end = 24.dp, top = 12.dp, bottom = 12.dp), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold) }
+                items(count = 2) { index -> DetailTimelineItem(title = if(index == 0) stringResource(R.string.action_water) else stringResource(R.string.action_fertilize), date = stringResource(R.string.days_ago_format, index + 3), content = "", isLatest = false, isLast = index == 1, painter = if(index == 0) painterResource(R.drawable.ic_water_drop_custom) else painterResource(R.drawable.ic_fertilize_custom)) }
+                item { Spacer(Modifier.height(120.dp)) }
             }
         }
+
+        // --- Bottom Sheets 区域 ---
+
+        if (showCareSheet) { ModalBottomSheet(onDismissRequest = { showCareSheet = false }, sheetState = sheetState) { LogCareBottomSheetContent(onActionClick = { scope.launch { showCareSheet = false; snackbarHostState.showSnackbar("Recorded: $it") } }, onMilestoneClick = { showCareSheet = false }) } }
+
+        // 右上角管理菜单弹窗 (集成了编辑按钮)
         if (showManageSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showManageSheet = false },
@@ -343,33 +250,29 @@ fun PlantDetailScreen(onBack: () -> Unit) {
                 containerColor = MaterialTheme.colorScheme.surface,
                 dragHandle = { BottomSheetDefaults.DragHandle() }
             ) {
-                ManagementBottomSheetContent(onActionClick = { scope.launch { showManageSheet = false } })
+                ManagementBottomSheetContent(
+                    onEditClick = {
+                        scope.launch { showManageSheet = false }
+                        onEditClick() // 触发回调跳转到 EditPlantScreen
+                    },
+                    onActionClick = { scope.launch { showManageSheet = false } }
+                )
             }
         }
     }
 }
 
-// 核心组件：支持点击的数据项
+// ================= 组件区 =================
+
 @Composable
-fun DetailStatItem(modifier: Modifier, painter: Painter, label: String, value: String, isEditable: Boolean = false, onClick: (() -> Unit)? = null) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.4f))
-            .border(1.dp, if(isEditable) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
-            .clickable(enabled = onClick != null) { onClick?.invoke() }
-            .padding(12.dp)
-    ) {
+fun DetailStatItem(modifier: Modifier, painter: Painter, label: String, value: String) {
+    Box(modifier = modifier.clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.background.copy(alpha = 0.4f)).border(1.dp, MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)).padding(12.dp)) {
         Column {
             Row(verticalAlignment = Alignment.Top) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                     Icon(painter, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(Modifier.width(4.dp))
                     Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                // 右上角的编辑小图标
-                if (isEditable) {
-                    Icon(painterResource(R.drawable.ic_edit_custom), null, Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f))
                 }
             }
             Spacer(Modifier.height(4.dp))
@@ -378,10 +281,11 @@ fun DetailStatItem(modifier: Modifier, painter: Painter, label: String, value: S
     }
 }
 
-// 右上角管理菜单弹窗内容
 @Composable
-fun ManagementBottomSheetContent(onActionClick: (String) -> Unit) {
+fun ManagementBottomSheetContent(onEditClick: () -> Unit, onActionClick: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp)) {
+        ManagementItem(painterResource(R.drawable.ic_edit_custom), stringResource(R.string.edit), MaterialTheme.colorScheme.onSurface, onEditClick)
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
         ManagementItem(painterResource(R.drawable.ic_dead_custom), stringResource(R.string.status_dead), MaterialTheme.colorScheme.onSurface) { onActionClick("dead") }
         ManagementItem(painterResource(R.drawable.ic_sold_custom), stringResource(R.string.status_sold), MaterialTheme.colorScheme.onSurface) { onActionClick("sold") }
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 24.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
@@ -398,71 +302,30 @@ fun ManagementItem(painter: Painter, label: String, textColor: Color, onClick: (
     }
 }
 
-// 养护记录弹窗内容 (✅ 包含双行换行、居中对齐、动态高度修复)
 @Composable
 fun LogCareBottomSheetContent(onActionClick: (String) -> Unit, onMilestoneClick: () -> Unit) {
-    val careActions = listOf(
-        Pair(stringResource(R.string.action_water), R.drawable.ic_water_drop_custom),
-        Pair(stringResource(R.string.action_fertilize), R.drawable.ic_fertilize_custom),
-        Pair(stringResource(R.string.action_medicine), R.drawable.ic_medicine_custom),
-        Pair(stringResource(R.string.action_bug), R.drawable.ic_bug_custom),
-        Pair(stringResource(R.string.action_prune), R.drawable.ic_removeskin_custom),
-        Pair(stringResource(R.string.action_repot), R.drawable.ic_potting_custom),
-        Pair(stringResource(R.string.action_trim_roots), R.drawable.ic_cut_custom),
-        Pair(stringResource(R.string.action_other), R.drawable.ic_other_custom),
-    )
+    val careActions = listOf(Pair(stringResource(R.string.action_water), R.drawable.ic_water_drop_custom), Pair(stringResource(R.string.action_fertilize), R.drawable.ic_fertilize_custom), Pair(stringResource(R.string.action_medicine), R.drawable.ic_medicine_custom), Pair(stringResource(R.string.action_bug), R.drawable.ic_bug_custom), Pair(stringResource(R.string.action_prune), R.drawable.ic_removeskin_custom), Pair(stringResource(R.string.action_repot), R.drawable.ic_potting_custom), Pair(stringResource(R.string.action_trim_roots), R.drawable.ic_cut_custom), Pair(stringResource(R.string.action_other), R.drawable.ic_other_custom))
     Column(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp).fillMaxWidth()) {
-        Text(stringResource(R.string.sort_latest_water), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(20.dp))
-
-        // 🚀 使用 wrapContentHeight() 自适应网格高度，避免长英文被切断
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            modifier = Modifier.wrapContentHeight(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            userScrollEnabled = false
-        ) {
+        Text(stringResource(R.string.sort_latest_water), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold); Spacer(Modifier.height(20.dp))
+        LazyVerticalGrid(columns = GridCells.Fixed(4), modifier = Modifier.wrapContentHeight(), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp), userScrollEnabled = false) {
             items(careActions) { action ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)).clickable { onActionClick(action.first) }.padding(8.dp)
-                ) {
-                    Box(modifier = Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)), contentAlignment = Alignment.Center) {
-                        Icon(painterResource(action.second), null, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary)
-                    }
+                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)).clickable { onActionClick(action.first) }.padding(8.dp)) {
+                    Box(modifier = Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)), contentAlignment = Alignment.Center) { Icon(painterResource(action.second), null, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary) }
                     Spacer(Modifier.height(4.dp))
-
-                    // 🚀 核心文字排版：允许双行、全局居中、过长省略
-                    Text(
-                        text = action.first,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 14.sp,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Text(text = action.first, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center, lineHeight = 14.sp, modifier = Modifier.fillMaxWidth())
                 }
             }
         }
         HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
-        Text(stringResource(R.string.milestone_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(12.dp))
+        Text(stringResource(R.string.milestone_title), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold); Spacer(Modifier.height(12.dp))
         Button(onClick = onMilestoneClick, modifier = Modifier.fillMaxWidth().height(64.dp), shape = RoundedCornerShape(16.dp), colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
-            Icon(painterResource(R.drawable.ic_plant_nav), null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
-            Spacer(Modifier.width(12.dp))
-            Column {
-                Text(stringResource(R.string.milestone_title), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSecondaryContainer)
-                Text(stringResource(R.string.action_photo), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f))
-            }
+            Icon(painterResource(R.drawable.ic_plant_nav), null, tint = MaterialTheme.colorScheme.onSecondaryContainer); Spacer(Modifier.width(12.dp))
+            Column { Text(stringResource(R.string.milestone_title), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSecondaryContainer); Text(stringResource(R.string.action_photo), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)) }
         }
         Spacer(Modifier.height(32.dp))
     }
 }
 
-// 时间轴记录项
 @Composable
 fun DetailTimelineItem(title: String, date: String, content: String, isLatest: Boolean, isLast: Boolean, painter: Painter? = null) {
     Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp), verticalAlignment = Alignment.Top) {
@@ -474,10 +337,7 @@ fun DetailTimelineItem(title: String, date: String, content: String, isLatest: B
         Surface(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surface, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        if (painter != null) { Icon(painter, null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary); Spacer(Modifier.width(8.dp)) }
-                        Text(title, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
-                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) { if (painter != null) { Icon(painter, null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary); Spacer(Modifier.width(8.dp)) }; Text(title, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold) }
                     Text(date, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 if (content.isNotEmpty()) Text(content, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 8.dp))
